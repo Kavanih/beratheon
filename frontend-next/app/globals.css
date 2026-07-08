@@ -542,3 +542,62 @@ connect-modal {
   z-index: 2147483646 !important;
   pointer-events: auto !important;
 }
+
+/* Mobile — desktop-only game shell */
+.mobile-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.5rem;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201, 162, 39, 0.12), transparent 70%),
+    var(--dungeon-bg);
+  text-align: center;
+}
+
+.mobile-gate-inner {
+  display: flex;
+  max-width: 22rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobile-gate-logo {
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 24px rgba(201, 162, 39, 0.45));
+  animation: logo-float 3.2s ease-in-out infinite;
+}
+
+.mobile-gate-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--dungeon-gold);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.mobile-gate-copy,
+.mobile-gate-hint {
+  font-family: 'Silkscreen', monospace;
+  font-size: 0.72rem;
+  line-height: 1.65;
+  color: var(--dungeon-text-muted);
+}
+
+.mobile-gate-hint strong {
+  color: var(--dungeon-gold);
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+

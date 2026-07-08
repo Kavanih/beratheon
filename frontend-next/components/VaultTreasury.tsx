@@ -5,6 +5,7 @@ import { tokenToMicro, microToToken } from 'flowvault-sdk'
 import { useWallet } from '@/context/WalletProvider'
 import {
   applyStrategy,
+  applyStrategyAndDeposit,
   createReadOnlyVault,
   depositToVault,
   depositRoutePreview,
@@ -13,12 +14,12 @@ import {
   FLOWVAULT_CONTRACT_ID,
   GAME_STRATEGIES,
   strategyOverridesForDeposit,
-  transferUsdcx,
   USDCX_CONTRACT_ID,
   validateDepositAgainstRules,
   type TxProof,
   type VaultStrategyId,
 } from '@/lib/flowvault'
+import { DUNGEON_ESCROW_USDCX, holdVsLockHint } from '@/lib/vaultGate'
 
 export default function VaultTreasury({ onMessage }: { onMessage: (m: string) => void }) {
   const {
@@ -37,8 +38,6 @@ export default function VaultTreasury({ onMessage }: { onMessage: (m: string) =>
   const [strategyId, setStrategyId] = useState<VaultStrategyId>('dungeon_escrow')
   const [depositAmount, setDepositAmount] = useState('2')
   const [withdrawAmount, setWithdrawAmount] = useState('1')
-  const [sendRecipient, setSendRecipient] = useState('ST2Y1HES6JR37ZFVZWCPTZWEE0WG79G3Y8VV3EE29')
-  const [sendAmount, setSendAmount] = useState('10')
   const [busy, setBusy] = useState(false)
   const [routingSummary, setRoutingSummary] = useState<string | null>(null)
   const [minDepositHint, setMinDepositHint] = useState<string | null>(null)
@@ -165,28 +164,6 @@ export default function VaultTreasury({ onMessage }: { onMessage: (m: string) =>
     }
   }
 
-  const runSendUsdcx = async () => {
-    if (!address) {
-      onMessage('Connect your Stacks wallet first')
-      return
-    }
-    setBusy(true)
-    try {
-      const txId = await transferUsdcx(address, sendRecipient.trim(), sendAmount)
-      saveProof({
-        txId,
-        action: `Send ${sendAmount} USDCx → ${sendRecipient.slice(0, 8)}…`,
-        explorerUrl: explorerTxUrl(txId),
-        at: Date.now(),
-      })
-      onMessage(`Sent ${sendAmount} USDCx — approve in wallet if prompted`)
-    } catch (e: unknown) {
-      onMessage(e instanceof Error ? e.message : 'Transfer failed')
-    } finally {
-      setBusy(false)
-    }
-  }
-
   const runClearRules = async () => {
     if (!vault) return
     setBusy(true)
@@ -201,6 +178,44 @@ export default function VaultTreasury({ onMessage }: { onMessage: (m: string) =>
       setBusy(false)
     }
   }
+
+  const runDungeonUnlock = async () => {
+    if (!vault || !address) {
+      onMessage('Connect your Stacks wallet first')
+      return
+    }
+    setStrategyId('dungeon_escrow')
+    setDepositAmount('2')
+    setBusy(true)
+    try {
+      onMessage('Unlock Dungetron — confirm strategy tx, then deposit tx in your wallet…')
+      const overrides = strategyOverridesForDeposit('dungeon_escrow', '2')
+      const result = await applyStrategyAndDeposit(vault, address, 'dungeon_escrow', '2', overrides)
+      saveProof({
+        txId: result.strategyTxId,
+        action: 'Strategy (Dungeon Run Escrow)',
+        strategy: 'dungeon_escrow',
+        explorerUrl: explorerTxUrl(result.strategyTxId),
+        at: Date.now(),
+      })
+      saveProof({
+        txId: result.depositTxId,
+        action: 'Deposit 2 USDCx (dungeon unlock)',
+        strategy: 'dungeon_escrow',
+        explorerUrl: explorerTxUrl(result.depositTxId),
+        at: Date.now(),
+      })
+      onMessage('Done — at least 1 USDCx should now be LOCKED. Return to Dungetron and Enter.')
+      await refresh()
+    } catch (e: unknown) {
+      onMessage(flowvaultErrorMessage(e))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const holdLockHint =
+    connected && vaultSnapshot ? holdVsLockHint(vaultSnapshot.total, vaultSnapshot.locked) : ''
 
   return (
     <div className="vault-treasury flex h-full w-full flex-col gap-3 overflow-y-auto p-3 text-parchment">
@@ -251,6 +266,19 @@ export default function VaultTreasury({ onMessage }: { onMessage: (m: string) =>
           Token: <span className="text-gold/90">{USDCX_CONTRACT_ID}</span>
         </div>
       </div>
+
+      {holdLockHint && (
+        <div className="pixel-panel flex flex-wrap items-center gap-3 border-hp/40 px-4 py-3">
+          <p className="flex-1 font-silk text-[12px] leading-5 text-hp">{holdLockHint}</p>
+          <button
+            onClick={runDungeonUnlock}
+            disabled={busy || !connected}
+            className="pixel-btn pixel-btn-gold px-4 py-2 font-silk text-[12px]"
+          >
+            {busy ? 'Signing…' : `Unlock Dungetron (${DUNGEON_ESCROW_USDCX} USDCx lock)`}
+          </button>
+        </div>
+      )}
 
       <div className="grid flex-1 gap-3 lg:grid-cols-[1fr_360px]">
         <div className="flex flex-col gap-3">
@@ -359,32 +387,6 @@ export default function VaultTreasury({ onMessage }: { onMessage: (m: string) =>
                 </button>
               </div>
             </div>
-          </div>
-
-          <div className="pixel-panel p-4">
-            <div className="mb-2 font-silk text-[13px] uppercase tracking-wide text-parchment/75">Send USDCx (wallet)</div>
-            <p className="mb-3 font-silk text-[13px] leading-5 text-parchment/70">
-              Direct SIP-010 transfer from your wallet balance — not from the vault HOLD bucket.
-            </p>
-            <label className="mb-1.5 block font-silk text-[13px] text-parchment/75">Recipient</label>
-            <input
-              value={sendRecipient}
-              onChange={(e) => setSendRecipient(e.target.value)}
-              className="mb-2 w-full rounded border-2 border-edge bg-[#1a1410] px-3 py-2.5 font-silk text-[13px] text-gold focus:border-gold focus:outline-none"
-            />
-            <label className="mb-1.5 block font-silk text-[13px] text-parchment/75">Amount (USDCx)</label>
-            <input
-              value={sendAmount}
-              onChange={(e) => setSendAmount(e.target.value)}
-              className="mb-2 w-full rounded border-2 border-edge bg-[#1a1410] px-3 py-2.5 font-silk text-[16px] text-gold focus:border-gold focus:outline-none"
-            />
-            <button
-              onClick={runSendUsdcx}
-              disabled={busy || !connected}
-              className="pixel-btn pixel-btn-gold w-full px-3 py-3 font-silk text-[14px]"
-            >
-              {busy ? 'Signing…' : `Send ${sendAmount || '0'} USDCx`}
-            </button>
           </div>
 
           <div className="pixel-panel p-4">

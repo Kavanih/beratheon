@@ -42,7 +42,7 @@ interface WalletCtx {
   disconnectWallet: () => void
   vault: FlowVault | null
   vaultSnapshot: VaultSnapshot | null
-  refreshVault: () => Promise<void>
+  refreshVault: () => Promise<VaultSnapshot | null>
   contractLabel: string
 }
 
@@ -61,7 +61,7 @@ const WalletContext = createContext<WalletCtx>({
   disconnectWallet: () => {},
   vault: null,
   vaultSnapshot: null,
-  refreshVault: async () => {},
+  refreshVault: async () => null,
   contractLabel: '',
 })
 
@@ -239,21 +239,23 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     return createVaultClient(address, executor)
   }, [address])
 
-  const refreshVault = useCallback(async () => {
+  const refreshVault = useCallback(async (): Promise<VaultSnapshot | null> => {
     if (!address) {
       setVaultSnapshot(null)
-      return
+      return null
     }
     const ro = createReadOnlyVault()
     const state = await ro.getVaultState(address)
     const formatted = formatVaultState(state)
-    setVaultSnapshot({
+    const snapshot: VaultSnapshot = {
       total: formatted.total,
       locked: formatted.locked,
       available: formatted.available,
       hasLock: formatted.hasLock,
       blocksRemaining: formatted.blocksRemaining,
-    })
+    }
+    setVaultSnapshot(snapshot)
+    return snapshot
   }, [address])
 
   useEffect(() => {

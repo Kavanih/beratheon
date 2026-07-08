@@ -90,8 +90,15 @@ export default function HubWorld({
     }
     const kd = (e: KeyboardEvent) => onKey(e, true)
     const ku = (e: KeyboardEvent) => onKey(e, false)
+    const clearKeys = () => {
+      keys.current = {}
+    }
     window.addEventListener('keydown', kd)
     window.addEventListener('keyup', ku)
+    window.addEventListener('blur', clearKeys)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) clearKeys()
+    })
 
     let raf = 0
     const speed = 0.09
@@ -185,6 +192,7 @@ export default function HubWorld({
       window.removeEventListener('resize', resize)
       window.removeEventListener('keydown', kd)
       window.removeEventListener('keyup', ku)
+      window.removeEventListener('blur', clearKeys)
     }
   }, [playerName])
 

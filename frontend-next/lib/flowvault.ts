@@ -365,30 +365,6 @@ export async function applyStrategyAndDeposit(
   }
 }
 
-/** Send USDCx from the connected wallet (SIP-010 transfer). */
-export async function transferUsdcx(
-  senderAddress: string,
-  recipient: string,
-  amountUsdc: string
-): Promise<string> {
-  const { loadStacksConnect, NETWORK } = await import('./stacksConnectClient')
-  const { request } = await loadStacksConnect()
-  const amount = tokenToMicro(amountUsdc)
-  const result = await request('stx_transferSip10Ft', {
-    recipient,
-    asset: USDCX_ASSET_ID,
-    amount,
-    network: NETWORK,
-    address: senderAddress,
-  })
-  if (typeof result === 'string') return result
-  if (result && typeof result === 'object') {
-    const r = result as { txid?: string; txId?: string }
-    return r.txid ?? r.txId ?? String(result)
-  }
-  return String(result)
-}
-
 /** Human-readable breakdown of a deposit contract response. */
 export function formatDepositBreakdown(result: DepositResult) {
   return {

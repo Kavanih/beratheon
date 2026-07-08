@@ -17,7 +17,13 @@ import { useWallet } from '@/context/WalletProvider'
 import { Dungeon, GearItem, Listing, Loot, MATERIALS, SKINS, materialByKey, rarityOf } from '@/lib/game'
 import { getEnergy, MAX_ENERGY, spendEnergy } from '@/lib/energyStorage'
 import { hydrateEquipped, loadPlayerSave } from '@/lib/playerStorage'
-import { hasDungeonEscrow, hasUnderhaulEscrow, underhaulGateMessage, vaultGateMessage } from '@/lib/vaultGate'
+import {
+  hasDungeonEscrow,
+  hasUnderhaulEscrow,
+  holdVsLockHint,
+  underhaulGateMessage,
+  vaultGateMessage,
+} from '@/lib/vaultGate'
 
 interface Owned extends GearItem {
   qty: number
@@ -73,6 +79,8 @@ export default function Home() {
   const [toasts, setToasts] = useState<{ id: number; text: string }[]>([])
   const [owned, setOwned] = useState<Owned[]>([])
   const [equipped, setEquipped] = useState<Equipped>({})
+  const [dungeonRunKey, setDungeonRunKey] = useState(0)
+  const [enteringDungeon, setEnteringDungeon] = useState(false)
 
   // generous starting stockpile so the forge is immediately usable
   const [materials, setMaterials] = useState<Record<string, number>>(() => {
@@ -134,29 +142,39 @@ export default function Home() {
     [toast]
   )
 
-  const enterDungeon = (d: Dungeon) => {
+  const enterDungeon = async (d: Dungeon) => {
     if (!connected) {
       toast('Connect your Stacks wallet first — use the button in the top bar')
       return
     }
-    if (d.id === 'underhaul') {
-      if (!hasUnderhaulEscrow(vaultSnapshot?.locked)) {
-        toast(underhaulGateMessage(vaultSnapshot?.locked))
+    if (enteringDungeon) return
+    setEnteringDungeon(true)
+    try {
+      const snap = (await refreshVault().catch(() => null)) ?? vaultSnapshot
+      if (d.id === 'underhaul') {
+        if (!hasUnderhaulEscrow(snap?.locked)) {
+          const hint = holdVsLockHint(snap?.total, snap?.locked)
+          toast(hint || underhaulGateMessage(snap?.locked))
+          setScreen('vault')
+          return
+        }
+      } else if (!hasDungeonEscrow(snap?.locked)) {
+        const hint = holdVsLockHint(snap?.total, snap?.locked)
+        toast(hint || vaultGateMessage(snap?.locked))
         setScreen('vault')
         return
       }
-    } else if (!hasDungeonEscrow(vaultSnapshot?.locked)) {
-      toast(vaultGateMessage(vaultSnapshot?.locked))
-      setScreen('vault')
-      return
+      const current = getEnergy(address)
+      if (current < d.energy) {
+        toast(`Not enough energy — regens 10/hour (max ${maxEnergy})`)
+        return
+      }
+      setEnergy(spendEnergy(address, d.energy))
+      setDungeonRunKey((k) => k + 1)
+      setScreen('dungeon')
+    } finally {
+      setEnteringDungeon(false)
     }
-    const current = getEnergy(address)
-    if (current < d.energy) {
-      toast(`Not enough energy — regens 10/hour (max ${maxEnergy})`)
-      return
-    }
-    setEnergy(spendEnergy(address, d.energy))
-    setScreen('dungeon')
   }
 
   const handleBuy = useCallback(
@@ -240,13 +258,22 @@ export default function Home() {
               energy={energy}
               maxEnergy={maxEnergy}
               vaultLocked={vaultSnapshot?.locked ?? '0'}
+              vaultTotal={vaultSnapshot?.total ?? '0'}
+              vaultAvailable={vaultSnapshot?.available ?? '0'}
+              entering={enteringDungeon}
               onEnter={enterDungeon}
               onBack={() => setScreen('hub')}
               onOpenVault={() => setScreen('vault')}
             />
           )}
           {screen === 'dungeon' && (
-            <Combat look={look} playerName={claimedUsername ?? 'Hero'} onExit={() => setScreen('hub')} onLoot={handleLoot} />
+            <Combat
+              key={dungeonRunKey}
+              look={look}
+              playerName={claimedUsername ?? 'Hero'}
+              onExit={() => setScreen('hub')}
+              onLoot={handleLoot}
+            />
           )}
           {screen === 'workbench' && <Workbench materials={materials} onCraft={handleCraft} />}
           {screen === 'gearstation' && (

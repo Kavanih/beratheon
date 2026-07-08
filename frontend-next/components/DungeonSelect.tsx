@@ -6,6 +6,7 @@ import {
   UNDERHAUL_ESCROW_USDCX,
   hasDungeonEscrow,
   hasUnderhaulEscrow,
+  holdVsLockHint,
 } from '@/lib/vaultGate'
 import HallTileBackground from './HallTileBackground'
 import { Monster, MoveIcon } from './pixel'
@@ -14,6 +15,9 @@ export default function DungeonSelect({
   energy,
   maxEnergy,
   vaultLocked,
+  vaultTotal,
+  vaultAvailable,
+  entering,
   onEnter,
   onBack,
   onOpenVault,
@@ -21,6 +25,9 @@ export default function DungeonSelect({
   energy: number
   maxEnergy: number
   vaultLocked: string
+  vaultTotal: string
+  vaultAvailable: string
+  entering?: boolean
   onEnter: (d: Dungeon) => void
   onBack: () => void
   onOpenVault?: () => void
@@ -28,6 +35,8 @@ export default function DungeonSelect({
   const normalOk = hasDungeonEscrow(vaultLocked)
   const underhaulOk = hasUnderhaulEscrow(vaultLocked)
   const lockedAmt = Number(vaultLocked) || 0
+  const totalAmt = Number(vaultTotal) || 0
+  const holdHint = holdVsLockHint(vaultTotal, vaultLocked)
 
   function canEnterDungeon(d: Dungeon) {
     if (d.id === 'underhaul') return underhaulOk && energy >= d.energy
@@ -72,19 +81,29 @@ export default function DungeonSelect({
 
         <div className="mt-4 pixel-panel flex flex-wrap items-center gap-3 px-4 py-3">
           <div className="flex-1 font-silk text-[11px] leading-5 text-parchment/85">
-            <span className="text-gold">FlowVault entry fees:</span> You have{' '}
-            <span className="text-gold">{vaultLocked} USDCx locked</span>.
+            <span className="text-gold">FlowVault entry fees</span> — vault total{' '}
+            <span className="text-gold">{vaultTotal} USDCx</span>
+            {' · '}
+            locked <span className="text-gold">{vaultLocked}</span>
+            {' · '}
+            hold <span className="text-gold">{vaultAvailable}</span>
             <span className="mt-1 block">
-              Normal — {DUNGEON_ESCROW_USDCX} USDCx LOCK · Underhaul — {UNDERHAUL_ESCROW_USDCX} USDCx LOCK total
+              Dungetron only checks <span className="text-gold">LOCK</span>, not HOLD. Normal needs{' '}
+              {DUNGEON_ESCROW_USDCX} USDCx locked · Underhaul needs {UNDERHAUL_ESCROW_USDCX} USDCx locked total.
             </span>
-            {!normalOk && (
+            {holdHint && (
+              <span className="mt-2 block rounded border border-hp/40 bg-hp/10 px-2 py-2 text-hp">{holdHint}</span>
+            )}
+            {!holdHint && !normalOk && (
               <span className="mt-1 block text-hp">
-                Vault → Dungeon Run Escrow → Set Strategy → Deposit {DUNGEON_ESCROW_USDCX}+ USDCx
+                Vault → choose <span className="text-gold">Dungeon Run Escrow</span> → Set Strategy → Deposit 2+ USDCx
+                (1 locks, rest stays withdrawable).
               </span>
             )}
             {normalOk && !underhaulOk && (
               <span className="mt-1 block text-parchment/70">
-                Underhaul needs {UNDERHAUL_ESCROW_USDCX} USDCx locked ({lockedAmt}/{UNDERHAUL_ESCROW_USDCX}) — use Underhaul Entry Vault strategy.
+                Underhaul needs {UNDERHAUL_ESCROW_USDCX} USDCx locked ({lockedAmt}/{UNDERHAUL_ESCROW_USDCX}) — use Underhaul
+                Entry Vault strategy.
               </span>
             )}
           </div>
@@ -124,10 +143,10 @@ export default function DungeonSelect({
                   <div className="mt-2 font-silk text-[10px] text-parchment/60">Rewards: {d.reward}</div>
                   <button
                     onClick={() => onEnter(d)}
-                    disabled={!canEnter}
+                    disabled={!canEnter || entering}
                     className="pixel-btn pixel-btn-gold mt-3 w-full px-4 py-3 font-silk text-[12px]"
                   >
-                    {enterLabel(d)}
+                    {entering ? 'Checking vault…' : enterLabel(d)}
                   </button>
                 </div>
               </div>

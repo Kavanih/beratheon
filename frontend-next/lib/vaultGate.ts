@@ -46,3 +46,11 @@ export function gigamarketStakeMessage(availableUsdcx: string | null | undefined
   }
   return `Deposit ${GIGAMARKET_MIN_STAKE_USDCX}+ USDCx via Gigamarket Revenue Split to qualify for fee share (you have ${have} USDCx on HOLD).`
 }
+
+/** User has vault balance but nothing locked for dungeon entry. */
+export function holdVsLockHint(totalUsdcx: string | null | undefined, lockedUsdcx: string | null | undefined): string {
+  const total = parseUsdcxAmount(totalUsdcx)
+  const locked = parseUsdcxAmount(lockedUsdcx)
+  if (total < DUNGEON_ESCROW_USDCX || locked >= DUNGEON_ESCROW_USDCX) return ''
+  return `You have ${total} USDCx in the vault but ${locked} locked. HOLD does not count for Dungetron — pick Dungeon Run Escrow, Set Strategy, then Deposit at least 2 USDCx from your wallet (1 locks). Money already on HOLD stays withdrawable; you need a new deposit after strategy is set.`
+}

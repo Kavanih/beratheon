@@ -67,10 +67,4 @@ We are intentionally building earn paths in public: early players and stakers ar
 
 Beratheon is **never “done”** in the hackathon sense. It is a product we intend to keep extending: new floors, new items, new earn loops, tighter chain integration every cycle.
 
----
 
-## Built with
-
-Stacks · Clarity · FlowVault · Next.js · [FlowVault Builder Bounty](https://flow-vault.dev/bounty)
-
-*Desktop-first experience — best played with keyboard on a laptop or desktop.*

@@ -1,0 +1,24 @@
+{
+  "name": "Wool",
+  "description": "Wool — Beratheon crafting material (items-sft token #5).",
+  "image": "http://localhost:3000/materials/1005.png",
+  "external_url": "http://localhost:3000/?item=1005",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1005"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "5"
+    }
+  ]
+}

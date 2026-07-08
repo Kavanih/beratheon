@@ -1,0 +1,24 @@
+{
+  "name": "Moonstone",
+  "description": "Moonstone — Beratheon crafting material (items-sft token #9).",
+  "image": "http://localhost:3000/materials/1009.png",
+  "external_url": "http://localhost:3000/?item=1009",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Uncommon"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1009"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "9"
+    }
+  ]
+}

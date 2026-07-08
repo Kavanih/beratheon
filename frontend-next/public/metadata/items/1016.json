@@ -1,0 +1,24 @@
+{
+  "name": "Mithril",
+  "description": "Mithril — Beratheon crafting material (items-sft token #16).",
+  "image": "http://localhost:3000/materials/1016.png",
+  "external_url": "http://localhost:3000/?item=1016",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1016"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "16"
+    }
+  ]
+}

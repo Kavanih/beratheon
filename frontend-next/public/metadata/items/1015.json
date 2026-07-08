@@ -1,0 +1,24 @@
+{
+  "name": "Void Shard",
+  "description": "Void Shard — Beratheon crafting material (items-sft token #15).",
+  "image": "http://localhost:3000/materials/1015.png",
+  "external_url": "http://localhost:3000/?item=1015",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Epic"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1015"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "15"
+    }
+  ]
+}

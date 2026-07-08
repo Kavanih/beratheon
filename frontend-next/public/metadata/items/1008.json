@@ -1,0 +1,24 @@
+{
+  "name": "Steel",
+  "description": "Steel — Beratheon crafting material (items-sft token #8).",
+  "image": "http://localhost:3000/materials/1008.png",
+  "external_url": "http://localhost:3000/?item=1008",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Uncommon"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1008"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "8"
+    }
+  ]
+}

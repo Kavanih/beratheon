@@ -1,0 +1,66 @@
+[project]
+name = "beratheon"
+description = "Beratheon: Rogue-lite RPG on Stacks"
+authors = ["Beratheon Team"]
+clarity_version = "3"
+epoch = "3.0"
+
+[contracts.helpers]
+path = "contracts/helpers.clar"
+
+[contracts.traits]
+path = "contracts/traits.clar"
+
+[contracts.honey-token]
+path = "contracts/honey-token.clar"
+depends_on = ["traits"]
+
+[contracts.juice-token]
+path = "contracts/juice-token.clar"
+depends_on = ["traits"]
+
+[contracts.items-sft]
+path = "contracts/items-sft.clar"
+depends_on = ["traits"]
+
+[contracts.cub-nft]
+path = "contracts/cub-nft.clar"
+depends_on = ["traits"]
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.username-nft]
+path = "contracts/username-nft.clar"
+depends_on = ["traits", "honey-token"]
+
+[contracts.noob-pass]
+path = "contracts/noob-pass.clar"
+depends_on = ["traits"]
+
+[contracts.game-registry]
+path = "contracts/game-registry.clar"
+depends_on = ["traits"]
+
+[contracts.game-authority]
+path = "contracts/game-authority.clar"
+depends_on = ["traits", "items-sft", "honey-token", "juice-token"]
+
+[contracts.marketplace]
+path = "contracts/marketplace.clar"
+depends_on = ["traits", "items-sft", "cub-nft", "username-nft"]
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.crafting]
+path = "contracts/crafting.clar"
+depends_on = ["traits", "items-sft", "game-authority"]
+
+[contracts.conquest]
+path = "contracts/conquest.clar"
+depends_on = ["traits", "items-sft", "game-authority"]
+clarity_version = 3
+epoch = "3.0"
+
+[contracts.echoes]
+path = "contracts/echoes.clar"
+depends_on = ["traits", "honey-token", "game-authority"]

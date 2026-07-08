@@ -1,0 +1,622 @@
+{
+  "items": {
+    "head": {
+      "101": {
+        "id": 101,
+        "name": "Leather Cap",
+        "slot": "head",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 2 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "cloth": 5, "leather": 2 },
+        "recipeId": 2101
+      },
+      "102": {
+        "id": 102,
+        "name": "Wool Beanie",
+        "slot": "head",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 1, "coldRes": 1 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "wool": 8, "leather": 1 },
+        "recipeId": 2102
+      },
+      "103": {
+        "id": 103,
+        "name": "Copper Helm",
+        "slot": "head",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 3 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "copperOre": 3, "leather": 2 },
+        "recipeId": 2103
+      },
+      "111": {
+        "id": 111,
+        "name": "Reinforced Helm",
+        "slot": "head",
+        "rarity": 1,
+        "category": "GEAR",
+        "stats": { "def": 5, "dodge": 1 },
+        "durability": [50, 60, 70, 80],
+        "craftCost": { "copperOre": 8, "leather": 5, "ironOre": 2 },
+        "recipeId": 2111
+      },
+      "112": {
+        "id": 112,
+        "name": "Mystic Crown",
+        "slot": "head",
+        "rarity": 1,
+        "category": "GEAR",
+        "stats": { "def": 3, "magic": 2 },
+        "durability": [50, 60, 70, 80],
+        "craftCost": { "cloth": 10, "moonstone": 3, "essence": 1 },
+        "recipeId": 2112
+      },
+      "121": {
+        "id": 121,
+        "name": "Iron Crown",
+        "slot": "head",
+        "rarity": 2,
+        "category": "GEAR",
+        "stats": { "def": 8, "str": 1 },
+        "durability": [60, 70, 80, 90],
+        "craftCost": { "ironOre": 15, "leather": 10, "copperOre": 5, "gem": 2 },
+        "recipeId": 2121
+      },
+      "131": {
+        "id": 131,
+        "name": "Obsidian Crown",
+        "slot": "head",
+        "rarity": 3,
+        "category": "GEAR",
+        "stats": { "def": 12, "str": 2, "crit": 1 },
+        "durability": [70, 80, 90, 100],
+        "craftCost": { "obsidian": 30, "ironOre": 20, "leather": 15, "gem": 5, "essence": 2 },
+        "recipeId": 2131
+      },
+      "141": {
+        "id": 141,
+        "name": "Crown of Kings",
+        "slot": "head",
+        "rarity": 4,
+        "category": "GEAR",
+        "stats": { "def": 15, "str": 3, "crit": 2, "luck": 1 },
+        "durability": [80, 90, 100, 110],
+        "craftCost": { "mithril": 50, "obsidian": 40, "gem": 25, "essence": 10, "starShard": 5 },
+        "recipeId": 2141
+      },
+      "151": {
+        "id": 151,
+        "name": "Titan's Crown",
+        "slot": "head",
+        "rarity": 5,
+        "category": "GEAR",
+        "stats": { "def": 20, "str": 4, "crit": 3, "luck": 2 },
+        "durability": [90, 100, 110, 120],
+        "craftCost": { "mithril": 70, "obsidian": 60, "gem": 40, "essence": 20, "starShard": 10, "eternalShard": 5 },
+        "recipeId": 2151
+      },
+      "161": {
+        "id": 161,
+        "name": "Crown of Eternity",
+        "slot": "head",
+        "rarity": 6,
+        "category": "GEAR",
+        "stats": { "def": 25, "str": 5, "magic": 5, "crit": 4, "luck": 3, "allRes": 2 },
+        "durability": [100, 110, 120, 130],
+        "craftCost": { "eternalShard": 100, "mithril": 80, "obsidian": 60, "gem": 40, "essence": 20 },
+        "recipeId": 2161
+      }
+    },
+    "body": {
+      "201": {
+        "id": 201,
+        "name": "Cloth Tunic",
+        "slot": "body",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 3 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "cloth": 10 },
+        "recipeId": 2201
+      },
+      "202": {
+        "id": 202,
+        "name": "Leather Armor",
+        "slot": "body",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 5 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "leather": 8, "cloth": 3 },
+        "recipeId": 2202
+      },
+      "203": {
+        "id": 203,
+        "name": "Copper Plate",
+        "slot": "body",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 7 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "copperOre": 5, "leather": 5 },
+        "recipeId": 2203
+      }
+    },
+    "hands": {
+      "301": {
+        "id": 301,
+        "name": "Cloth Gloves",
+        "slot": "hands",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 1, "dodge": 1 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "cloth": 5 },
+        "recipeId": 2301
+      },
+      "302": {
+        "id": 302,
+        "name": "Leather Gloves",
+        "slot": "hands",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 2, "dodge": 2 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "leather": 6, "cloth": 2 },
+        "recipeId": 2302
+      },
+      "303": {
+        "id": 303,
+        "name": "Work Gloves",
+        "slot": "hands",
+        "rarity": 0,
+        "category": "GEAR",
+        "stats": { "def": 3, "craft": 1 },
+        "durability": [40, 50, 60, 70],
+        "craftCost": { "leather": 5, "cloth": 3 },
+        "recipeId": 2303
+      }
+    },
+    "materials": {
+      "1001": {
+        "id": 1001,
+        "name": "Cloth",
+        "category": "MATERIAL",
+        "rarity": 0,
+        "stackSize": 999,
+        "sources": ["vendor", "loot"]
+      },
+      "1002": {
+        "id": 1002,
+        "name": "Leather",
+        "category": "MATERIAL",
+        "rarity": 0,
+        "stackSize": 999,
+        "sources": ["vendor", "loot"]
+      },
+      "1003": {
+        "id": 1003,
+        "name": "Copper Ore",
+        "category": "MATERIAL",
+        "rarity": 0,
+        "stackSize": 999,
+        "sources": ["mining", "vendor"]
+      },
+      "1004": {
+        "id": 1004,
+        "name": "Iron Ore",
+        "category": "MATERIAL",
+        "rarity": 0,
+        "stackSize": 999,
+        "sources": ["mining", "vendor"]
+      },
+      "1005": {
+        "id": 1005,
+        "name": "Wool",
+        "category": "MATERIAL",
+        "rarity": 0,
+        "stackSize": 999,
+        "sources": ["vendor", "loot"]
+      },
+      "1006": {
+        "id": 1006,
+        "name": "Feather",
+        "category": "MATERIAL",
+        "rarity": 0,
+        "stackSize": 999,
+        "sources": ["hunting", "loot"]
+      },
+      "1007": {
+        "id": 1007,
+        "name": "Silk",
+        "category": "MATERIAL",
+        "rarity": 1,
+        "stackSize": 999,
+        "sources": ["vendor", "loot"]
+      },
+      "1008": {
+        "id": 1008,
+        "name": "Steel",
+        "category": "MATERIAL",
+        "rarity": 1,
+        "stackSize": 999,
+        "sources": ["crafted"]
+      },
+      "1009": {
+        "id": 1009,
+        "name": "Moonstone",
+        "category": "MATERIAL",
+        "rarity": 1,
+        "stackSize": 999,
+        "sources": ["mining", "loot"]
+      },
+      "1010": {
+        "id": 1010,
+        "name": "Essence",
+        "category": "MATERIAL",
+        "rarity": 1,
+        "stackSize": 999,
+        "sources": ["dungeon", "loot"]
+      },
+      "1011": {
+        "id": 1011,
+        "name": "Dragon Scale",
+        "category": "MATERIAL",
+        "rarity": 2,
+        "stackSize": 999,
+        "sources": ["boss_loot"]
+      },
+      "1012": {
+        "id": 1012,
+        "name": "Gem",
+        "category": "MATERIAL",
+        "rarity": 2,
+        "stackSize": 999,
+        "sources": ["mining", "loot"]
+      },
+      "1013": {
+        "id": 1013,
+        "name": "Obsidian",
+        "category": "MATERIAL",
+        "rarity": 2,
+        "stackSize": 999,
+        "sources": ["mining", "loot"]
+      },
+      "1014": {
+        "id": 1014,
+        "name": "Star Shard",
+        "category": "MATERIAL",
+        "rarity": 3,
+        "stackSize": 999,
+        "sources": ["rare_loot", "dungeon"]
+      },
+      "1015": {
+        "id": 1015,
+        "name": "Void Shard",
+        "category": "MATERIAL",
+        "rarity": 3,
+        "stackSize": 999,
+        "sources": ["rare_loot", "dungeon"]
+      },
+      "1016": {
+        "id": 1016,
+        "name": "Mithril",
+        "category": "MATERIAL",
+        "rarity": 4,
+        "stackSize": 999,
+        "sources": ["legendary_loot", "crafted"]
+      },
+      "1017": {
+        "id": 1017,
+        "name": "Eternal Shard",
+        "category": "MATERIAL",
+        "rarity": 5,
+        "stackSize": 999,
+        "sources": ["mythic_loot", "crafted"]
+      }
+    },
+    "consumables": {
+      "2001": {
+        "id": 2001,
+        "name": "Health Potion",
+        "category": "CONSUMABLE",
+        "rarity": 0,
+        "stackSize": 99,
+        "effect": "heal",
+        "value": 50,
+        "duration": 0,
+        "craftCost": { "herb": 2, "essence": 1 },
+        "recipeId": 1101
+      },
+      "2002": {
+        "id": 2002,
+        "name": "Mana Potion",
+        "category": "CONSUMABLE",
+        "rarity": 0,
+        "stackSize": 99,
+        "effect": "mana",
+        "value": 30,
+        "duration": 0,
+        "craftCost": { "cloth": 3, "moonstone": 1 },
+        "recipeId": 1102
+      },
+      "2003": {
+        "id": 2003,
+        "name": "Stamina Potion",
+        "category": "CONSUMABLE",
+        "rarity": 0,
+        "stackSize": 99,
+        "effect": "stamina",
+        "value": 20,
+        "duration": 30,
+        "craftCost": { "herb": 2, "cloth": 1 },
+        "recipeId": 1103
+      },
+      "2004": {
+        "id": 2004,
+        "name": "Strength Elixir",
+        "category": "CONSUMABLE",
+        "rarity": 1,
+        "stackSize": 99,
+        "effect": "buff",
+        "stat": "str",
+        "value": 2,
+        "duration": 60,
+        "craftCost": { "herb": 5, "essence": 2, "gem": 1 },
+        "recipeId": 1104
+      },
+      "2005": {
+        "id": 2005,
+        "name": "Wisdom Elixir",
+        "category": "CONSUMABLE",
+        "rarity": 1,
+        "stackSize": 99,
+        "effect": "buff",
+        "stat": "magic",
+        "value": 2,
+        "duration": 60,
+        "craftCost": { "herb": 5, "moonstone": 2, "essence": 1 },
+        "recipeId": 1105
+      },
+      "2006": {
+        "id": 2006,
+        "name": "Haste Scroll",
+        "category": "CONSUMABLE",
+        "rarity": 1,
+        "stackSize": 99,
+        "effect": "buff",
+        "stat": "dodge",
+        "value": 3,
+        "duration": 45,
+        "craftCost": { "cloth": 3, "feather": 2, "essence": 1 },
+        "recipeId": 1106
+      },
+      "2007": {
+        "id": 2007,
+        "name": "Barrier Scroll",
+        "category": "CONSUMABLE",
+        "rarity": 1,
+        "stackSize": 99,
+        "effect": "buff",
+        "stat": "def",
+        "value": 5,
+        "duration": 45,
+        "craftCost": { "cloth": 3, "leather": 2, "essence": 1 },
+        "recipeId": 1107
+      },
+      "2008": {
+        "id": 2008,
+        "name": "Revive Potion",
+        "category": "CONSUMABLE",
+        "rarity": 3,
+        "stackSize": 5,
+        "effect": "revive",
+        "value": 50,
+        "duration": 0,
+        "craftCost": { "herb": 10, "essence": 5, "starShard": 2 },
+        "recipeId": 1108
+      }
+    },
+    "skins": {
+      "3001": {
+        "id": 3001,
+        "name": "Gold Trim",
+        "category": "SKIN",
+        "slot": "head",
+        "rarity": 0,
+        "stackSize": 999,
+        "craftCost": { "goldDust": 5, "cloth": 2 },
+        "tradeable": true
+      },
+      "3002": {
+        "id": 3002,
+        "name": "Silver Trim",
+        "category": "SKIN",
+        "slot": "head",
+        "rarity": 0,
+        "stackSize": 999,
+        "craftCost": { "silverDust": 5, "cloth": 2 },
+        "tradeable": true
+      },
+      "3003": {
+        "id": 3003,
+        "name": "Crimson Dye",
+        "category": "SKIN",
+        "slot": "body",
+        "rarity": 1,
+        "stackSize": 999,
+        "craftCost": { "redDye": 8, "cloth": 3 },
+        "tradeable": true
+      },
+      "3004": {
+        "id": 3004,
+        "name": "Azure Dye",
+        "category": "SKIN",
+        "slot": "body",
+        "rarity": 1,
+        "stackSize": 999,
+        "craftCost": { "blueDye": 8, "cloth": 3 },
+        "tradeable": true
+      },
+      "3005": {
+        "id": 3005,
+        "name": "Emerald Dye",
+        "category": "SKIN",
+        "slot": "body",
+        "rarity": 1,
+        "stackSize": 999,
+        "craftCost": { "greenDye": 8, "cloth": 3 },
+        "tradeable": true
+      },
+      "3006": {
+        "id": 3006,
+        "name": "Void Black",
+        "category": "SKIN",
+        "slot": "hands",
+        "rarity": 2,
+        "stackSize": 999,
+        "craftCost": { "blackDye": 10, "leather": 5, "essence": 2 },
+        "tradeable": true
+      },
+      "3007": {
+        "id": 3007,
+        "name": "Starlight Glow",
+        "category": "SKIN",
+        "slot": "hands",
+        "rarity": 2,
+        "stackSize": 999,
+        "craftCost": { "moonstoneDust": 10, "silk": 5, "essence": 2 },
+        "tradeable": true
+      },
+      "3008": {
+        "id": 3008,
+        "name": "Flame Orange",
+        "category": "SKIN",
+        "slot": "body",
+        "rarity": 2,
+        "stackSize": 999,
+        "craftCost": { "orangeDye": 12, "cloth": 8, "essence": 3 },
+        "tradeable": true
+      }
+    },
+    "stubs": {
+      "4001": {
+        "id": 4001,
+        "name": "Crimson Stub",
+        "category": "STUB",
+        "faction": 1,
+        "rarity": 0,
+        "stackSize": 999,
+        "craftCost": { "cloth": 5, "redDye": 2 },
+        "tradeable": false
+      },
+      "4002": {
+        "id": 4002,
+        "name": "Azure Stub",
+        "category": "STUB",
+        "faction": 2,
+        "rarity": 0,
+        "stackSize": 999,
+        "craftCost": { "cloth": 5, "blueDye": 2 },
+        "tradeable": false
+      },
+      "4003": {
+        "id": 4003,
+        "name": "Emerald Stub",
+        "category": "STUB",
+        "faction": 3,
+        "rarity": 0,
+        "stackSize": 999,
+        "craftCost": { "cloth": 5, "greenDye": 2 },
+        "tradeable": false
+      },
+      "4004": {
+        "id": 4004,
+        "name": "Void Stub",
+        "category": "STUB",
+        "faction": 4,
+        "rarity": 0,
+        "stackSize": 999,
+        "craftCost": { "cloth": 5, "blackDye": 2 },
+        "tradeable": false
+      }
+    },
+    "collectibles": {
+      "5001": {
+        "id": 5001,
+        "name": "Founder's Badge",
+        "category": "COLLECTIBLE",
+        "rarity": 4,
+        "stackSize": 1,
+        "soulbound": true,
+        "source": "launch_event"
+      },
+      "5002": {
+        "id": 5002,
+        "name": "Beta Tester Token",
+        "category": "COLLECTIBLE",
+        "rarity": 3,
+        "stackSize": 1,
+        "soulbound": true,
+        "source": "beta_period"
+      },
+      "5003": {
+        "id": 5003,
+        "name": "Speedrun Trophy",
+        "category": "COLLECTIBLE",
+        "rarity": 2,
+        "stackSize": 1,
+        "soulbound": false,
+        "source": "speedrun_challenge"
+      },
+      "5004": {
+        "id": 5004,
+        "name": "Boss Slayer Medal",
+        "category": "COLLECTIBLE",
+        "rarity": 2,
+        "stackSize": 1,
+        "soulbound": false,
+        "source": "boss_defeat"
+      },
+      "5005": {
+        "id": 5005,
+        "name": "Legendary Hunter Badge",
+        "category": "COLLECTIBLE",
+        "rarity": 3,
+        "stackSize": 1,
+        "soulbound": false,
+        "source": "legendary_drops"
+      }
+    }
+  },
+  "rarities": {
+    "0": { "name": "Common", "color": "#FFFFFF", "dropRate": 0.50 },
+    "1": { "name": "Uncommon", "color": "#00FF00", "dropRate": 0.30 },
+    "2": { "name": "Rare", "color": "#0099FF", "dropRate": 0.12 },
+    "3": { "name": "Epic", "color": "#9933FF", "dropRate": 0.05 },
+    "4": { "name": "Legendary", "color": "#FFAA00", "dropRate": 0.02 },
+    "5": { "name": "Mythic", "color": "#FF0000", "dropRate": 0.008 },
+    "6": { "name": "Eternal", "color": "#00FFFF", "dropRate": 0.001 }
+  },
+  "slots": {
+    "head": { "id": 1, "name": "Head" },
+    "body": { "id": 2, "name": "Body" },
+    "hands": { "id": 3, "name": "Hands" },
+    "legs": { "id": 4, "name": "Legs" },
+    "feet": { "id": 5, "name": "Feet" },
+    "accessory": { "id": 6, "name": "Accessory" }
+  },
+  "categories": {
+    "GEAR": { "id": 4, "name": "Equipment", "tradeable": true },
+    "MATERIAL": { "id": 1, "name": "Material", "tradeable": true },
+    "SKIN": { "id": 2, "name": "Cosmetic", "tradeable": true },
+    "CONSUMABLE": { "id": 3, "name": "Consumable", "tradeable": true },
+    "STUB": { "id": 5, "name": "Faction Token", "tradeable": false },
+    "COLLECTIBLE": { "id": 6, "name": "Collectible", "tradeable": false }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "beratheon-clarity-contracts",
+  "version": "1.0.0",
+  "description": "Clarity smart contracts for Beratheon RPG on Stacks",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "check": "clarinet check",
+    "console": "clarinet console",
+    "deploy:testnet": "clarinet deployments testnet",
+    "deploy:mainnet": "clarinet deployments mainnet"
+  },
+  "keywords": [
+    "stacks",
+    "clarity",
+    "blockchain",
+    "smart-contracts",
+    "beratheon",
+    "rogue-lite",
+    "rpg"
+  ],
+  "author": "Beratheon Team",
+  "license": "Proprietary",
+  "devDependencies": {
+    "@stacks/clarinet-sdk": "^3.21.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {}
+}

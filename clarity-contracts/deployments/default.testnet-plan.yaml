@@ -1,0 +1,108 @@
+id: 0
+name: Testnet deployment
+network: testnet
+stacks-node: https://api.testnet.hiro.so
+bitcoin-node: http://blockstack:blockstacksystem@bitcoind.testnet.stacks.co:18332
+plan:
+  batches:
+  - id: 0
+    transactions:
+    - transaction-type: contract-publish
+      contract-name: traits
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8975923
+      path: contracts/traits.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: items-sft
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8997941
+      path: contracts/items-sft.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: conquest
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8992070
+      path: contracts/conquest.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: crafting
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8995005
+      path: contracts/crafting.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: cub-nft
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8989134
+      path: contracts/cub-nft.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: honey-token
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8989134
+      path: contracts/honey-token.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: echoes
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8983262
+      path: contracts/echoes.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: juice-token
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8987666
+      path: contracts/juice-token.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: game-authority
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 9000877
+      path: contracts/game-authority.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: game-registry
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8975923
+      path: contracts/game-registry.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: helpers
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8970052
+      path: contracts/helpers.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: marketplace
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 9000877
+      path: contracts/marketplace.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: noob-pass
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8986198
+      path: contracts/noob-pass.clar
+      anchor-block-only: true
+      clarity-version: 1
+    - transaction-type: contract-publish
+      contract-name: username-nft
+      expected-sender: ST30PNQ7ZP471GY3BDM0XFT48EA5WC5GTQ0PG3XHR
+      cost: 8990602
+      path: contracts/username-nft.clar
+      anchor-block-only: true
+      clarity-version: 1
+    epoch: '2.05'

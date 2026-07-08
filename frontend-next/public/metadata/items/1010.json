@@ -1,0 +1,24 @@
+{
+  "name": "Essence",
+  "description": "Essence — Beratheon crafting material (items-sft token #10).",
+  "image": "http://localhost:3000/materials/1010.png",
+  "external_url": "http://localhost:3000/?item=1010",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Uncommon"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1010"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "10"
+    }
+  ]
+}

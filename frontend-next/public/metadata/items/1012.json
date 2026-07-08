@@ -1,0 +1,24 @@
+{
+  "name": "Gem",
+  "description": "Gem — Beratheon crafting material (items-sft token #12).",
+  "image": "http://localhost:3000/materials/1012.png",
+  "external_url": "http://localhost:3000/?item=1012",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1012"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "12"
+    }
+  ]
+}

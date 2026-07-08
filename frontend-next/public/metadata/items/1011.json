@@ -1,0 +1,24 @@
+{
+  "name": "Dragon Scale",
+  "description": "Dragon Scale — Beratheon crafting material (items-sft token #11).",
+  "image": "http://localhost:3000/materials/1011.png",
+  "external_url": "http://localhost:3000/?item=1011",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1011"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "11"
+    }
+  ]
+}

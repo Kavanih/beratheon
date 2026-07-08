@@ -1,0 +1,19 @@
+{
+  "name": "beratheon-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "wallet:info": "node --env-file=.env scripts/wallet-info.mjs",
+    "faucet:stx": "node --env-file=.env scripts/request-faucet.mjs",
+    "flowvault:smoke": "node --env-file=.env scripts/flowvault-smoke.mjs",
+    "seed:marketplace": "node --env-file=.env scripts/seed-marketplace.mjs",
+    "test": "npm run wallet:info && npm run flowvault:smoke"
+  },
+  "dependencies": {
+    "@stacks/network": "^7.5.0",
+    "@stacks/transactions": "^7.5.0",
+    "@stacks/wallet-sdk": "^7.0.2",
+    "flowvault-sdk": "^0.1.2"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Star Shard",
+  "description": "Star Shard — Beratheon crafting material (items-sft token #14).",
+  "image": "http://localhost:3000/materials/1014.png",
+  "external_url": "http://localhost:3000/?item=1014",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Epic"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1014"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "14"
+    }
+  ]
+}

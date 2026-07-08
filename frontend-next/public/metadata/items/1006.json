@@ -1,0 +1,24 @@
+{
+  "name": "Feather",
+  "description": "Feather — Beratheon crafting material (items-sft token #6).",
+  "image": "http://localhost:3000/materials/1006.png",
+  "external_url": "http://localhost:3000/?item=1006",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1006"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "6"
+    }
+  ]
+}

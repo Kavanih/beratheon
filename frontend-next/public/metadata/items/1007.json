@@ -1,0 +1,24 @@
+{
+  "name": "Silk",
+  "description": "Silk — Beratheon crafting material (items-sft token #7).",
+  "image": "http://localhost:3000/materials/1007.png",
+  "external_url": "http://localhost:3000/?item=1007",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Uncommon"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1007"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "7"
+    }
+  ]
+}

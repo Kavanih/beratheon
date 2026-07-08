@@ -1,0 +1,24 @@
+{
+  "name": "Eternal Shard",
+  "description": "Eternal Shard — Beratheon crafting material (items-sft token #17).",
+  "image": "http://localhost:3000/materials/1017.png",
+  "external_url": "http://localhost:3000/?item=1017",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Mythic"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1017"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "17"
+    }
+  ]
+}

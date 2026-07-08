@@ -1,0 +1,24 @@
+{
+  "name": "Obsidian",
+  "description": "Obsidian — Beratheon crafting material (items-sft token #13).",
+  "image": "http://localhost:3000/materials/1013.png",
+  "external_url": "http://localhost:3000/?item=1013",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1013"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "13"
+    }
+  ]
+}

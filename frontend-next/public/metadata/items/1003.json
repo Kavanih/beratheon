@@ -1,0 +1,24 @@
+{
+  "name": "Copper Ore",
+  "description": "Copper Ore — Beratheon crafting material (items-sft token #3).",
+  "image": "http://localhost:3000/materials/1003.png",
+  "external_url": "http://localhost:3000/?item=1003",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Material"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Common"
+    },
+    {
+      "trait_type": "Game Item ID",
+      "value": "1003"
+    },
+    {
+      "trait_type": "SFT Token ID",
+      "value": "3"
+    }
+  ]
+}

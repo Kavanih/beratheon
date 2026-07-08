@@ -35,7 +35,6 @@ export default function DungeonSelect({
   const normalOk = hasDungeonEscrow(vaultLocked)
   const underhaulOk = hasUnderhaulEscrow(vaultLocked)
   const lockedAmt = Number(vaultLocked) || 0
-  const totalAmt = Number(vaultTotal) || 0
   const holdHint = holdVsLockHint(vaultTotal, vaultLocked)
 
   function canEnterDungeon(d: Dungeon) {

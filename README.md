@@ -15,7 +15,7 @@ Pixel RPG on Stacks — Next.js frontend + Clarity smart contracts.
 1. Import this repo in [Vercel](https://vercel.com/new).
 2. Set **Root Directory** to `frontend-next`.
 3. Framework preset: **Next.js** (build: `npm run build`, output: default).
-4. Add environment variables from `frontend-next/.env.example` (copy values from your deployed testnet contracts).
+4. Add environment variables from `frontend-next/.env.example` (copy values from  deployed testnet contracts).
 5. Deploy.
 
 The app uses `/api/stacks/*` routes to proxy Hiro read-only calls (avoids browser CORS).

@@ -35,7 +35,7 @@ export default function ItemDetailPanel({
   if (!sel) {
     return (
       <div className="gs-panel-inner flex min-h-[280px] flex-col">
-        <div className="gs-panel-title font-pixel text-[10px] text-[#00ffff]">Item Details</div>
+        <div className="gs-panel-title font-pixel text-[10px] text-gold">Item Details</div>
         <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 text-center font-silk text-[11px] leading-5 text-gold/40">
           <span>Select a gear slot or inventory item</span>
           <span className="text-[10px] text-gold/25">Click a slot, then pick gear to equip</span>
@@ -49,7 +49,7 @@ export default function ItemDetailPanel({
 
   return (
     <div className="gs-panel-inner flex min-h-0 flex-1 flex-col gap-3">
-      <div className="gs-panel-title font-pixel text-[10px] text-[#00ffff]">Item Details</div>
+      <div className="gs-panel-title font-pixel text-[10px] text-gold">Item Details</div>
 
       {/* name / type / rarity chips + preview icon */}
       <div className="flex items-start gap-3">
@@ -73,7 +73,7 @@ export default function ItemDetailPanel({
         <div className="gs-stat-row font-silk text-[10px] text-gold/70">
           {Object.entries(sel.stats).map(([k, v]) => (
             <span key={k}>
-              {k}: <span className="text-[#00ffff]">+{v}</span>
+              {k}: <span className="text-uncommon">+{v}</span>
             </span>
           ))}
         </div>
@@ -92,8 +92,8 @@ export default function ItemDetailPanel({
 
       {/* resource row (demo) */}
       <div className="flex flex-wrap gap-2 font-silk text-[9px] text-gold/60">
-        <span className="gs-chip px-2 py-1">📜 2.95k/62</span>
-        <span className="gs-chip px-2 py-1">🔋 3/5</span>
+        <span className="gs-chip px-2 py-1">SCROLLS 2.95K/62</span>
+        <span className="gs-chip px-2 py-1">CHARGES 3/5</span>
       </div>
 
       {/* 3D action buttons */}

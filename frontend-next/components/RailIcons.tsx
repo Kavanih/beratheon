@@ -1,11 +1,29 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import BrandCrest from './BrandCrest'
 
-/** Hard-edged 8-bit rail icons — no glow, integer coords only */
+/** Hard-edged 8-bit rail icons — flat fills, integer coords only.
+ *  Each nav item carries its own hue so the rail reads as more than gold/gray;
+ *  SideRail.tsx imports RAIL_ACCENTS to drive the matching glow on the button. */
 
-const ACTIVE = { c: '#c9a227', d: '#6b4423', l: '#f0d878', w: '#f0e6d2' }
-const MUTED = { c: '#5c5c66', d: '#2a2a30', l: '#8a8070', w: '#6e6e78' }
+export const RAIL_ACCENTS = {
+  hub: '#c9a227',
+  market: '#3ee6ff',
+  workbench: '#e8943a',
+  gearstation: '#b15cff',
+  collection: '#d4c4a8',
+} as const
+
+type Shade = { c: string; d: string; l: string }
+
+const SHADES: Record<keyof typeof RAIL_ACCENTS, { active: Shade; dim: Shade }> = {
+  hub: { active: { c: '#c9a227', d: '#6b4423', l: '#f0d878' }, dim: { c: '#7a6220', d: '#3a2e10', l: '#8a7030' } },
+  market: { active: { c: '#3ee6ff', d: '#12414a', l: '#8ff3ff' }, dim: { c: '#2a6b78', d: '#16333a', l: '#3a7f8a' } },
+  workbench: { active: { c: '#e8943a', d: '#5c3a12', l: '#ffcf8a' }, dim: { c: '#8a5a24', d: '#3a2410', l: '#9a6a34' } },
+  gearstation: { active: { c: '#b15cff', d: '#3f2159', l: '#d4b3ff' }, dim: { c: '#6b3f8f', d: '#2a1a3a', l: '#7a5a94' } },
+  collection: { active: { c: '#d4c4a8', d: '#4a4038', l: '#f0e6d2' }, dim: { c: '#8a8070', d: '#2a2a30', l: '#6e6e78' } },
+}
 
 function IconWrap({ children }: { children: ReactNode }) {
   return (
@@ -22,12 +40,12 @@ function IconWrap({ children }: { children: ReactNode }) {
   )
 }
 
-function P(active?: boolean) {
-  return active ? ACTIVE : MUTED
+function P(id: keyof typeof RAIL_ACCENTS, active?: boolean): Shade {
+  return active ? SHADES[id].active : SHADES[id].dim
 }
 
 export function RailBriefcase({ active }: { active?: boolean }) {
-  const { c, d, l } = P(active)
+  const { c, d, l } = P('collection', active)
   return (
     <IconWrap>
       <rect x="6" y="10" width="20" height="14" fill={d} stroke={c} strokeWidth="1" />
@@ -38,7 +56,7 @@ export function RailBriefcase({ active }: { active?: boolean }) {
 }
 
 export function RailDiamond({ active }: { active?: boolean }) {
-  const { c, d, l } = P(active)
+  const { c, d, l } = P('market', active)
   return (
     <IconWrap>
       <polygon points="16,4 26,12 16,28 6,12" fill={d} stroke={c} strokeWidth="1" />
@@ -47,21 +65,8 @@ export function RailDiamond({ active }: { active?: boolean }) {
   )
 }
 
-export function RailChip({ active }: { active?: boolean }) {
-  const { c, d } = P(active)
-  return (
-    <IconWrap>
-      <rect x="7" y="7" width="18" height="18" fill={d} stroke={c} strokeWidth="1" />
-      <rect x="10" y="10" width="12" height="12" fill="#000000" stroke={c} strokeWidth="1" />
-      <rect x="13" y="13" width="6" height="6" fill={c} />
-      <rect x="7" y="14" width="3" height="4" fill={c} />
-      <rect x="22" y="14" width="3" height="4" fill={c} />
-    </IconWrap>
-  )
-}
-
 export function RailFist({ active }: { active?: boolean }) {
-  const { c, d } = P(active)
+  const { c, d } = P('workbench', active)
   return (
     <IconWrap>
       <rect x="10" y="8" width="12" height="10" fill={d} stroke={c} strokeWidth="1" />
@@ -75,7 +80,7 @@ export function RailFist({ active }: { active?: boolean }) {
 }
 
 export function RailLink({ active }: { active?: boolean }) {
-  const { c, d, l } = P(active)
+  const { c, d, l } = P('gearstation', active)
   return (
     <IconWrap>
       <rect x="4" y="10" width="24" height="12" fill="none" stroke={c} strokeWidth="1" />
@@ -87,7 +92,9 @@ export function RailLink({ active }: { active?: boolean }) {
 }
 
 export function RailCoin({ active }: { active?: boolean }) {
-  const { c, d, l } = P(active)
+  const { c, d, l } = active
+    ? { c: '#c9a227', d: '#6b4423', l: '#f0d878' }
+    : { c: '#5c5c66', d: '#2a2a30', l: '#8a8070' }
   return (
     <IconWrap>
       <rect x="5" y="5" width="22" height="22" fill={d} stroke={c} strokeWidth="1" />
@@ -98,7 +105,9 @@ export function RailCoin({ active }: { active?: boolean }) {
 }
 
 export function RailSwords({ active }: { active?: boolean }) {
-  const { c, l } = P(active)
+  const { c, l } = active
+    ? { c: '#c9a227', l: '#f0d878' }
+    : { c: '#5c5c66', l: '#8a8070' }
   const h = active ? '#888888' : '#444444'
   return (
     <IconWrap>
@@ -111,7 +120,7 @@ export function RailSwords({ active }: { active?: boolean }) {
 }
 
 export function RailHub({ active }: { active?: boolean }) {
-  const { c, d, l } = P(active)
+  const { c, d, l } = P('hub', active)
   return (
     <IconWrap>
       <rect x="8" y="14" width="16" height="12" fill={d} stroke={c} strokeWidth="1" />
@@ -137,14 +146,5 @@ export function RailAvatar({ look }: { look?: { accent: string } }) {
 }
 
 export function RailCrest() {
-  return (
-    <img
-      src="/logo.png"
-      alt=""
-      width={28}
-      height={28}
-      className="crisp block h-7 w-7 object-contain"
-      draggable={false}
-    />
-  )
+  return <BrandCrest size={28} />
 }

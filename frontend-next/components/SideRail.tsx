@@ -1,15 +1,15 @@
 'use client'
 
-import type { ComponentType } from 'react'
+import type { ComponentType, CSSProperties } from 'react'
 import type { Look } from './Character'
 import {
   RailBriefcase,
-  RailChip,
   RailDiamond,
   RailFist,
   RailHub,
   RailLink,
   RailAvatar,
+  RAIL_ACCENTS,
 } from './RailIcons'
 
 export type Screen =
@@ -19,7 +19,6 @@ export type Screen =
   | 'workbench'
   | 'gearstation'
   | 'market'
-  | 'vault'
   | 'collection'
 
 const NAV: {
@@ -29,7 +28,6 @@ const NAV: {
 }[] = [
   { id: 'hub', label: 'Hall of Heroes', Icon: RailHub },
   { id: 'market', label: 'Gigamarket', Icon: RailDiamond },
-  { id: 'vault', label: 'FlowVault', Icon: RailChip },
   { id: 'workbench', label: 'Workbench', Icon: RailFist },
   { id: 'gearstation', label: 'Gear Station', Icon: RailLink },
   { id: 'collection', label: 'Gear Vault', Icon: RailBriefcase },
@@ -41,12 +39,16 @@ export default function SideRail({
   playerName = 'guest',
   look,
   onNameClick,
+  onAvatarClick,
+  hasNoobPass,
 }: {
   screen: Screen
   onNavigate: (s: Screen) => void
   playerName?: string
   look?: Look
   onNameClick?: () => void
+  onAvatarClick?: () => void
+  hasNoobPass?: boolean
 }) {
   const isActive = (id: Screen) =>
     screen === id || (id === 'hub' && (screen === 'dungeonselect' || screen === 'dungeon'))
@@ -57,11 +59,12 @@ export default function SideRail({
       <div className="mb-3 flex items-center gap-1 px-2 pt-2">
         <button
           type="button"
-          onClick={() => onNavigate('hub')}
-          title={playerName}
-          className="shrink-0 border-0 bg-transparent p-0"
+          onClick={onAvatarClick ?? (() => onNavigate('hub'))}
+          title={onAvatarClick ? (hasNoobPass ? 'Cub Pass holder' : 'Mint Cub Pass') : playerName}
+          className="relative shrink-0 border-0 bg-transparent p-0"
         >
           <RailAvatar look={look} />
+          {onAvatarClick && !hasNoobPass && connectedIndicator()}
         </button>
         <button
           type="button"
@@ -82,6 +85,7 @@ export default function SideRail({
               type="button"
               onClick={() => onNavigate(id)}
               title={label}
+              style={{ '--rail-accent': RAIL_ACCENTS[id as keyof typeof RAIL_ACCENTS] } as CSSProperties}
               className={`pixel-rail-btn group relative ${active ? 'pixel-rail-btn--active' : ''}`}
             >
               <Icon active={active} />
@@ -93,5 +97,11 @@ export default function SideRail({
         })}
       </nav>
     </aside>
+  )
+}
+
+function connectedIndicator() {
+  return (
+    <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border border-ink bg-hp" title="Mint Cub Pass" />
   )
 }

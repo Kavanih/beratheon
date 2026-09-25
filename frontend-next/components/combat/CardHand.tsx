@@ -32,17 +32,6 @@ export default function CardHand({
   return (
     <div className={`flex flex-col gap-2.5 ${mirror ? 'items-end' : 'items-start'}`}>
       <div className={`flex gap-2.5 ${mirror ? 'flex-row-reverse' : ''}`}>
-        {MOVE_TYPES.map((m) => (
-          <div
-            key={m}
-            className="battle-modifier grid place-items-center font-silk text-[12px] text-gold"
-            style={{ width: CARD_W, height: 32 }}
-          >
-            {moves[m].atk}
-          </div>
-        ))}
-      </div>
-      <div className={`flex gap-2.5 ${mirror ? 'flex-row-reverse' : ''}`}>
         {MOVE_TYPES.map((m) => {
           const move = moves[m]
           const active = activePick === m

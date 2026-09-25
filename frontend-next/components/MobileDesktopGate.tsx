@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import BrandCrest from './BrandCrest'
 
 const MOBILE_QUERY = '(max-width: 768px)'
 
@@ -19,10 +20,12 @@ export default function MobileDesktopGate({ children }: { children: React.ReactN
     return (
       <div className="mobile-gate">
         <div className="mobile-gate-inner">
-          <img src="/logo.png" alt="Beratheon" className="mobile-gate-logo" width={120} height={120} />
+          <div className="mobile-gate-logo">
+            <BrandCrest size={120} />
+          </div>
           <h1 className="mobile-gate-title">Switch to desktop</h1>
           <p className="mobile-gate-copy">
-            Beratheon is a keyboard-first pixel dungeon on Stacks. Hall exploration, card combat, FlowVault treasury,
+            Beratheon is a keyboard-first pixel dungeon on Stacks. Hall exploration, card combat, gear crafting,
             and Gigamarket work best on a larger screen.
           </p>
           <p className="mobile-gate-hint">Open <strong>beratheon.vercel.app</strong> on a laptop or desktop.</p>

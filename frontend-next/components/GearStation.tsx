@@ -134,7 +134,7 @@ export default function GearStation({
     <div className="flex h-full w-full flex-col gap-3 p-3">
       {/* window chrome */}
       <div className="gs-frame shrink-0 px-4 py-2.5">
-        <span className="font-pixel text-[11px] text-[#00ffff]">Gear Station</span>
+        <span className="font-pixel text-[11px] text-gold">Gear Station</span>
       </div>
 
       {/* two-panel body */}
@@ -253,7 +253,7 @@ export default function GearStation({
           </div>
 
           <div className="gs-frame flex max-h-[220px] min-h-[160px] flex-col overflow-hidden p-2">
-            <div className="gs-panel-title mb-2 font-pixel text-[9px] text-[#00ffff]">Inventory</div>
+            <div className="gs-panel-title mb-2 font-pixel text-[9px] text-gold">Inventory</div>
             <div className="min-h-0 flex-1 overflow-y-auto">
               <div className="grid grid-cols-4 gap-2">
                 {inventory.slice(0, 8).map((it, i) => {

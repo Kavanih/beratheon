@@ -15,7 +15,7 @@ export default function TopBar({
   gold: number
   title: string
 }) {
-  const { connected, shortAddress, connecting, connectWallet, disconnectWallet, vaultSnapshot, connectError, walletReady } =
+  const { connected, shortAddress, connecting, connectWallet, disconnectWallet, connectError, walletReady } =
     useWallet()
   const pct = Math.max(0, Math.min(100, (energy / maxEnergy) * 100))
 
@@ -27,11 +27,6 @@ export default function TopBar({
       <div className="flex flex-wrap items-center justify-end gap-2">
         {connected ? (
           <>
-            {vaultSnapshot && (
-              <div className="label-chip px-2 py-1 font-silk text-[10px] text-gold" title="FlowVault USDCx on HOLD">
-                Vault {vaultSnapshot.available} USDCx
-              </div>
-            )}
             <button
               type="button"
               onClick={disconnectWallet}

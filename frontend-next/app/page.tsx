@@ -9,21 +9,15 @@ import Workbench from '@/components/Workbench'
 import HubWorld from '@/components/HubWorld'
 import DungeonSelect from '@/components/DungeonSelect'
 import Gigamarket from '@/components/Gigamarket'
+import GearStation from '@/components/GearStation'
 import ComingSoon from '@/components/ComingSoon'
 import type { Equipped, EquipSlot, InvItem } from '@/components/GearStation'
 import ClaimUsernameModal from '@/components/ClaimUsernameModal'
-import VaultTreasury from '@/components/VaultTreasury'
+import NoobPassModal from '@/components/NoobPassModal'
 import { useWallet } from '@/context/WalletProvider'
 import { Dungeon, GearItem, Listing, Loot, MATERIALS, SKINS, materialByKey, rarityOf } from '@/lib/game'
 import { getEnergy, MAX_ENERGY, spendEnergy } from '@/lib/energyStorage'
-import { hydrateEquipped, loadPlayerSave } from '@/lib/playerStorage'
-import {
-  hasDungeonEscrow,
-  hasUnderhaulEscrow,
-  holdVsLockHint,
-  underhaulGateMessage,
-  vaultGateMessage,
-} from '@/lib/vaultGate'
+import { hydrateEquipped, loadPlayerSave, savePlayerSave } from '@/lib/playerStorage'
 
 interface Owned extends GearItem {
   qty: number
@@ -36,7 +30,6 @@ const SCREEN_TITLE: Record<Screen, string> = {
   workbench: 'The Forge',
   gearstation: 'Gear Station',
   market: 'Gigamarket',
-  vault: 'FlowVault Treasury',
   collection: 'Gear Vault',
 }
 
@@ -68,11 +61,12 @@ function buildEquipCatalog(owned: Owned[]): InvItem[] {
 }
 
 export default function Home() {
-  const { address, connected, displayName, claimedUsername, claimPlayerName, hasUsernameNft, vaultSnapshot, refreshVault } =
+  const { address, connected, displayName, claimedUsername, claimPlayerName, hasUsernameNft, hasNoobPass, mintCubPass } =
     useWallet()
   const playerName = claimedUsername ?? displayName
   const [screen, setScreen] = useState<Screen>('hub')
   const [nameModalOpen, setNameModalOpen] = useState(false)
+  const [passModalOpen, setPassModalOpen] = useState(false)
   const [energy, setEnergy] = useState(MAX_ENERGY)
   const maxEnergy = MAX_ENERGY
   const [gold, setGold] = useState(1250)
@@ -97,10 +91,6 @@ export default function Home() {
     const id = window.setInterval(() => setEnergy(getEnergy(address)), 60_000)
     return () => window.clearInterval(id)
   }, [address])
-
-  useEffect(() => {
-    if (connected) refreshVault().catch(() => {})
-  }, [connected, refreshVault, screen])
 
   let toastSeq = 0
   const toast = useCallback((text: string) => {
@@ -150,20 +140,6 @@ export default function Home() {
     if (enteringDungeon) return
     setEnteringDungeon(true)
     try {
-      const snap = (await refreshVault().catch(() => null)) ?? vaultSnapshot
-      if (d.id === 'underhaul') {
-        if (!hasUnderhaulEscrow(snap?.locked)) {
-          const hint = holdVsLockHint(snap?.total, snap?.locked)
-          toast(hint || underhaulGateMessage(snap?.locked))
-          setScreen('vault')
-          return
-        }
-      } else if (!hasDungeonEscrow(snap?.locked)) {
-        const hint = holdVsLockHint(snap?.total, snap?.locked)
-        toast(hint || vaultGateMessage(snap?.locked))
-        setScreen('vault')
-        return
-      }
       const current = getEnergy(address)
       if (current < d.energy) {
         toast(`Not enough energy — regens 10/hour (max ${maxEnergy})`)
@@ -192,6 +168,30 @@ export default function Home() {
     },
     [gold, toast]
   )
+
+  const handleChainMaterialBuy = useCallback(
+    (materialId: string, qty: number) => {
+      setMaterials((prev) => ({ ...prev, [materialId]: (prev[materialId] ?? 0) + qty }))
+    },
+    []
+  )
+
+  const handleEquip = useCallback((slot: EquipSlot, item: InvItem) => {
+    setEquipped((prev) => {
+      const next = { ...prev, [slot]: item }
+      savePlayerSave(next)
+      return next
+    })
+  }, [])
+
+  const handleUnequip = useCallback((slot: EquipSlot) => {
+    setEquipped((prev) => {
+      const next = { ...prev }
+      delete next[slot]
+      savePlayerSave(next)
+      return next
+    })
+  }, [])
 
   const handleSell = useCallback(
     (id: string, qty: number) => {
@@ -237,6 +237,8 @@ export default function Home() {
         playerName={playerName}
         look={look}
         onNameClick={() => setNameModalOpen(true)}
+        onAvatarClick={() => setPassModalOpen(true)}
+        hasNoobPass={hasNoobPass}
       />
 
       <div className="flex flex-1 flex-col overflow-hidden">
@@ -257,13 +259,9 @@ export default function Home() {
             <DungeonSelect
               energy={energy}
               maxEnergy={maxEnergy}
-              vaultLocked={vaultSnapshot?.locked ?? '0'}
-              vaultTotal={vaultSnapshot?.total ?? '0'}
-              vaultAvailable={vaultSnapshot?.available ?? '0'}
               entering={enteringDungeon}
               onEnter={enterDungeon}
               onBack={() => setScreen('hub')}
-              onOpenVault={() => setScreen('vault')}
             />
           )}
           {screen === 'dungeon' && (
@@ -277,20 +275,26 @@ export default function Home() {
           )}
           {screen === 'workbench' && <Workbench materials={materials} onCraft={handleCraft} />}
           {screen === 'gearstation' && (
-            <ComingSoon title="Gear Station" blurb="Dress up your hero, equip loot, and repair gear — arriving in a future patch." />
+            <GearStation
+              playerName={playerName}
+              look={look}
+              owned={equipCatalog.filter((i) => i.kind === 'gear')}
+              equipped={equipped}
+              onEquip={handleEquip}
+              onUnequip={handleUnequip}
+              onMessage={toast}
+            />
           )}
           {screen === 'market' && (
             <Gigamarket
               gold={gold}
               materials={materials}
-              vaultAvailable={vaultSnapshot?.available}
               onBuy={handleBuy}
               onSell={handleSell}
-              onOpenVault={() => setScreen('vault')}
+              onChainMaterialBuy={handleChainMaterialBuy}
               onMessage={toast}
             />
           )}
-          {screen === 'vault' && <VaultTreasury onMessage={toast} />}
           {screen === 'collection' && (
             <ComingSoon
               title="Gear Vault"
@@ -319,6 +323,16 @@ export default function Home() {
         onClaim={claimPlayerName}
         onClaimed={(name, txId) => {
           toast(txId ? `Welcome, ${name}! Tx submitted.` : `Welcome, ${name}!`)
+        }}
+      />
+      <NoobPassModal
+        open={passModalOpen}
+        onClose={() => setPassModalOpen(false)}
+        walletAddress={address}
+        hasNoobPass={hasNoobPass}
+        onMint={mintCubPass}
+        onMinted={(txId) => {
+          toast(txId ? 'Cub Pass mint submitted!' : 'Cub Pass minted!')
         }}
       />
     </div>

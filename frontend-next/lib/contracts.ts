@@ -29,6 +29,9 @@ export const BERATHEON_TREASURY =
 
 export const STACKS_NETWORK = (process.env.NEXT_PUBLIC_STACKS_NETWORK ?? 'testnet') as 'testnet' | 'mainnet'
 
+/** True when marketplace contract includes escrow + item transfer (marketplace-v2). */
+export const marketplaceHasEscrow = BERATHEON_CONTRACTS.marketplace.includes('marketplace-v2')
+
 export const HIRO_API_BASE =
   STACKS_NETWORK === 'mainnet' ? 'https://api.hiro.so' : 'https://api.testnet.hiro.so'
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ItemType, Listing, MARKET, MATERIALS, rarityOf } from '@/lib/game'
-import { buildLocalCatalog, materialMetadataUrl } from '@/lib/itemCatalog'
+import { buildLocalCatalog, getMaterialForTokenId, materialMetadataUrl } from '@/lib/itemCatalog'
 import { fetchOnChainInventory, type OnChainItem } from '@/lib/itemsSft'
 import {
   buyMarketplaceListing,
@@ -14,26 +14,23 @@ import {
 } from '@/lib/marketplaceChain'
 import { hiroTxUrl } from '@/lib/chainCalls'
 import { useWallet } from '@/context/WalletProvider'
-import { gigamarketStakeMessage, hasGigamarketStake } from '@/lib/vaultGate'
-import { BERATHEON_CONTRACTS } from '@/lib/contracts'
+import { BERATHEON_CONTRACTS, marketplaceHasEscrow } from '@/lib/contracts'
 
 const TABS: (ItemType | 'All')[] = ['All', 'Material', 'Consumable', 'Skin', 'Collectible']
 
 export default function Gigamarket({
   gold,
   materials,
-  vaultAvailable,
   onBuy,
   onSell,
-  onOpenVault,
+  onChainMaterialBuy,
   onMessage,
 }: {
   gold: number
   materials: Record<string, number>
-  vaultAvailable?: string
   onBuy: (l: Listing, qty: number) => void
   onSell: (id: string, qty: number) => void
-  onOpenVault?: () => void
+  onChainMaterialBuy?: (materialId: string, qty: number) => void
   onMessage?: (text: string) => void
 }) {
   const { address, connected } = useWallet()
@@ -50,9 +47,6 @@ export default function Gigamarket({
   const [chainSelId, setChainSelId] = useState<number | null>(null)
   const [listPriceStx, setListPriceStx] = useState('0.01')
   const [pending, setPending] = useState(false)
-
-  const stakeMsg = gigamarketStakeMessage(vaultAvailable)
-  const isSupporter = hasGigamarketStake(vaultAvailable)
 
   const refreshChain = useCallback(async () => {
     setChainLoading(true)
@@ -120,8 +114,16 @@ export default function Gigamarket({
     }
     setPending(true)
     try {
-      const txId = await buyMarketplaceListing(address, chainSel.listingId, qty, isSupporter)
-      onMessage?.(`Purchase submitted · ${microStxToStx(chainSel.pricePerUnitMicroStx * qty).toFixed(4)} STX`)
+      const txId = await buyMarketplaceListing(address, chainSel.listingId, qty, false)
+      const mat = getMaterialForTokenId(chainSel.tokenId)
+      if (mat && chainSel.tokenContract === BERATHEON_CONTRACTS.itemsSft) {
+        onChainMaterialBuy?.(mat.id, qty)
+      }
+      onMessage?.(
+        marketplaceHasEscrow
+          ? `Purchase submitted — ${qty}× ${chainSel.name} + ${microStxToStx(chainSel.pricePerUnitMicroStx * qty).toFixed(4)} STX`
+          : `STX sent — upgrade to marketplace-v2 for on-chain item delivery`
+      )
       window.open(hiroTxUrl(txId), '_blank', 'noopener,noreferrer')
       await refreshChain()
     } catch (e) {
@@ -326,14 +328,14 @@ export default function Gigamarket({
         <div className="ml-auto label-chip px-2 py-1 font-silk text-[10px] text-gold">$ {gold.toLocaleString()}</div>
       </div>
 
-      <div className={`pixel-panel mb-3 flex flex-wrap items-center gap-2 px-4 py-2 font-silk text-[11px] leading-5 ${isSupporter ? 'text-gold' : 'text-parchment/75'}`}>
-        <span className="font-bold text-gold">Liquidity stake:</span>
-        <span className="flex-1">{stakeMsg}</span>
-        {onOpenVault && <button onClick={onOpenVault} className="pixel-btn px-2 py-1 font-silk text-[10px]">FlowVault →</button>}
-      </div>
-
       {marketMode === 'chain' && (
         <div className="pixel-panel mb-3 px-4 py-2 font-silk text-[10px] text-parchment/70">
+          {!marketplaceHasEscrow && (
+            <p className="mb-2 text-hp">
+              Legacy marketplace — buys move STX only. Deploy <span className="text-gold">marketplace-v2</span> and set{' '}
+              <span className="text-gold">NEXT_PUBLIC_MARKETPLACE_CONTRACT</span> for item escrow.
+            </p>
+          )}
           Contracts:{' '}
           <a className="text-gold underline" href={`https://explorer.hiro.so/address/${BERATHEON_CONTRACTS.itemsSft}?chain=testnet`} target="_blank" rel="noreferrer">{BERATHEON_CONTRACTS.itemsSft}</a>
           {' · '}

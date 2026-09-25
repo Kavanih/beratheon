@@ -31,7 +31,7 @@ const DEPLOYER = process.env.BERATHEON_DEPLOYER ?? 'ST30PNQ7ZP471GY3BDM0XFT48EA5
 const itemsAddress = DEPLOYER
 const itemsName = 'items-sft'
 const marketAddress = DEPLOYER
-const marketName = 'marketplace'
+const marketName = process.env.MARKETPLACE_CONTRACT?.split('.').pop() ?? 'marketplace-v2'
 
 const recipient = process.env.RECIPIENT?.trim() ?? 'ST2Y1HES6JR37ZFVZWCPTZWEE0WG79G3Y8VV3EE29'
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))

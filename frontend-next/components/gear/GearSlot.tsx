@@ -49,7 +49,7 @@ export default function GearSlot({
             <span className="absolute bottom-0.5 left-0.5">
               <Star filled size={10} />
             </span>
-            <span className="absolute right-0.5 top-0.5 h-2 w-2 bg-[#00ffff] shadow-[1px_1px_0_#004466]" />
+            <span className="absolute right-0.5 top-0.5 h-2 w-2 bg-gold shadow-[1px_1px_0_#3d2814]" />
           </>
         )}
       </button>

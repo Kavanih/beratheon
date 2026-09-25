@@ -335,12 +335,13 @@ function drawTorchFlame(ctx: CanvasRenderingContext2D, px: number, py: number, x
   const cx = px + 4 * U + sway
   const cy = py + 2.5 * U
 
-  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, TILE * 0.9)
-  g.addColorStop(0, `rgba(255,232,163,${0.55 * flicker})`)
-  g.addColorStop(0.35, `rgba(255,179,71,${0.25 * flicker})`)
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, TILE * 1.6)
+  g.addColorStop(0, `rgba(255,232,163,${0.6 * flicker})`)
+  g.addColorStop(0.3, `rgba(255,179,71,${0.34 * flicker})`)
+  g.addColorStop(0.65, `rgba(232,148,58,${0.14 * flicker})`)
   g.addColorStop(1, 'rgba(255,140,0,0)')
   ctx.fillStyle = g
-  ctx.fillRect(px - TILE * 0.3, py - TILE * 0.2, TILE * 1.6, TILE * 1.4)
+  ctx.fillRect(px - TILE * 1.1, py - TILE * 1.0, TILE * 3.2, TILE * 3.2)
 
   ctx.fillStyle = P.torch
   ctx.fillRect(cx - U, cy, 2 * U, 2.5 * U)

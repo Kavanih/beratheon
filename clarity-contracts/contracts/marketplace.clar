@@ -1,6 +1,7 @@
 ;; marketplace.clar
 ;; On-chain order book for items-sft, cub-nft, username-nft
 ;; Fee model: 250 bps (juiced) / 1000 bps (unjuiced)
+;; Listings escrow SIP-013 balances in this contract until buy or cancel.
 
 (define-constant FEE_BPS_JUICED u250)
 (define-constant FEE_BPS_UNJUICED u1000)
@@ -52,12 +53,23 @@
   })
 )
 
-;; Create a listing
+;; Escrow SFT from seller into this contract (tx-sender must be seller).
+(define-private (escrow-sft (token-contract principal) (token-id uint) (amount uint))
+  (contract-call? token-contract transfer token-id amount tx-sender (as-contract tx-sender))
+)
+
+;; Release escrowed SFT from this contract to recipient.
+(define-private (release-sft (token-contract principal) (token-id uint) (amount uint) (recipient principal))
+  (as-contract (contract-call? token-contract transfer token-id amount tx-sender recipient))
+)
+
+;; Create a listing (escrows items-sft qty into marketplace)
 (define-public (create-listing (token-contract principal) (token-id uint) (qty uint) (price-per-unit-ustx uint) (expires-at uint))
   (begin
     (asserts! (> qty u0) (err u1))
     (asserts! (> price-per-unit-ustx u0) (err u2))
     (asserts! (> expires-at stacks-block-height) (err u3))
+    (try! (escrow-sft token-contract token-id qty))
     (let ((new-id (+ (var-get listing-counter) u1)))
       (var-set listing-counter new-id)
       (map-set listings new-id {
@@ -75,7 +87,7 @@
   )
 )
 
-;; Cancel a listing
+;; Cancel a listing (returns escrowed items to seller)
 (define-public (cancel (listing-id uint))
   (begin
     (let ((listing (map-get? listings listing-id)))
@@ -83,6 +95,7 @@
         l (begin
           (asserts! (is-eq tx-sender (get seller l)) (err u4))
           (asserts! (is-some (map-get? listing-active listing-id)) (err u5))
+          (try! (release-sft (get token-contract l) (get token-id l) (get qty l) tx-sender))
           (map-set listing-active listing-id false)
           (emit-cancel listing-id tx-sender)
           (ok true)
@@ -93,23 +106,31 @@
   )
 )
 
-;; Buy from a listing
+;; Buy from a listing (STX to seller + fee; escrowed items to buyer)
 (define-public (buy (listing-id uint) (qty uint) (is-juiced bool))
   (begin
     (let ((listing (map-get? listings listing-id)))
       (match listing
         l (begin
           (asserts! (is-some (map-get? listing-active listing-id)) (err u5))
+          (asserts! (> qty u0) (err u11))
           (asserts! (<= qty (get qty l)) (err u7))
           (asserts! (< stacks-block-height (get expires-at l)) (err u8))
           (let (
             (total-price (* qty (get price-per-unit-ustx l)))
             (fee-bps (if is-juiced FEE_BPS_JUICED FEE_BPS_UNJUICED))
             (fee-amount (/ (* total-price fee-bps) BPS_DENOMINATOR))
-            (seller-amount (- total-price fee-amount))
+            (remaining (- (get qty l) qty))
+            (token-contract (get token-contract l))
+            (token-id (get token-id l))
           )
             (try! (stx-transfer? total-price tx-sender (get seller l)))
             (try! (stx-transfer? fee-amount (get seller l) (var-get treasury)))
+            (try! (release-sft token-contract token-id qty tx-sender))
+            (if (is-eq remaining u0)
+              (map-set listing-active listing-id false)
+              (map-set listings listing-id (merge l { qty: remaining }))
+            )
             (emit-buy listing-id tx-sender qty total-price)
             (ok true)
           )

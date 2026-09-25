@@ -5,7 +5,7 @@ import { Providers } from './providers'
 export const metadata: Metadata = {
   title: 'Beratheon — Pixel Dungeon Crawler on Stacks',
   description:
-    'Beratheon is a pixel dungeon RPG on Stacks where players play, stake, and earn together. FlowVault Lock/Hold/Split gates Dungetron and Gigamarket; on-chain items, username NFTs, and STX trading — built continuously.',
+    'Beratheon is a pixel dungeon RPG on Stacks — battle through Dungetron, forge gear at the Workbench, and trade on-chain items and materials on Gigamarket, backed by username NFTs and STX trading. Built continuously.',
   icons: {
     icon: '/icon.png',
     apple: '/apple-icon.png',

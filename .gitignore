@@ -1,1 +1,36 @@
-guny
+# dependencies
+node_modules/
+.pnpm-store/
+
+# env / secrets
+.env
+.env.local
+.env.*.local
+clarity-contracts/settings/Testnet.toml
+clarity-contracts/settings/Devnet.toml
+*.mnemonic
+
+# build artifacts
+.next/
+dist/
+build/
+out/
+.turbo/
+
+# cache / logs
+*.log
+.cache/
+.bin/
+coverage/
+
+# clarinet
+clarity-contracts/.cache/
+clarity-contracts/costs-reports.json
+
+# typescript build info
+*.tsbuildinfo
+
+# reference material, not app code (see PROGRESS.md)
+*.webm
+EventContract-Somnia-main/
+contracts/

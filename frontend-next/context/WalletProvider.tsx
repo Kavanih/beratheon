@@ -1,12 +1,9 @@
 'use client'
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import type { ContractCallExecutor } from 'flowvault-sdk'
-import { DEFAULT_CONTRACTS, FlowVault, microToToken } from 'flowvault-sdk'
-import { callContract } from '@/lib/chainCalls'
-import { createReadOnlyVault, createVaultClient, formatVaultState } from '@/lib/flowvault'
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { claimUsername as persistUsername, displayNameFor, getClaimedUsername } from '@/lib/username'
 import { fetchOwnerTokenId, mintUsernameNft } from '@/lib/usernameChain'
+import { hasNoobPassOnChain, mintNoobPass } from '@/lib/noobPassChain'
 import {
   connectStacksWallet,
   ensureStacksConnectReady,
@@ -17,15 +14,8 @@ import {
 } from '@/lib/stacksConnectClient'
 import { clearWalletSession, saveWalletSession } from '@/lib/walletSession'
 
-export interface VaultSnapshot {
-  total: string
-  locked: string
-  available: string
-  hasLock: boolean
-  blocksRemaining: number
-}
-
 type ClaimResult = { ok: true; username: string; txId?: string } | { ok: false; error: string }
+type MintPassResult = { ok: true; txId?: string } | { ok: false; error: string }
 
 interface WalletCtx {
   address: string | null
@@ -33,17 +23,15 @@ interface WalletCtx {
   displayName: string
   claimedUsername: string | null
   hasUsernameNft: boolean
+  hasNoobPass: boolean
   claimPlayerName: (name: string) => Promise<ClaimResult>
+  mintCubPass: () => Promise<MintPassResult>
   connecting: boolean
   walletReady: boolean
   connected: boolean
   connectError: string | null
   connectWallet: (options?: { useModal?: boolean; providerId?: string }) => Promise<boolean>
   disconnectWallet: () => void
-  vault: FlowVault | null
-  vaultSnapshot: VaultSnapshot | null
-  refreshVault: () => Promise<VaultSnapshot | null>
-  contractLabel: string
 }
 
 const WalletContext = createContext<WalletCtx>({
@@ -52,33 +40,29 @@ const WalletContext = createContext<WalletCtx>({
   displayName: 'guest',
   claimedUsername: null,
   hasUsernameNft: false,
+  hasNoobPass: false,
   claimPlayerName: async () => ({ ok: false, error: 'Not connected' }),
+  mintCubPass: async () => ({ ok: false, error: 'Not connected' }),
   connecting: false,
   walletReady: false,
   connected: false,
   connectError: null,
   connectWallet: async () => false,
   disconnectWallet: () => {},
-  vault: null,
-  vaultSnapshot: null,
-  refreshVault: async () => null,
-  contractLabel: '',
 })
 
 function shortAddr(address: string) {
   return `${address.slice(0, 5)}…${address.slice(-4)}`
 }
 
-const contracts = DEFAULT_CONTRACTS.testnet
-
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [address, setAddress] = useState<string | null>(null)
   const [connecting, setConnecting] = useState(false)
   const [walletReady, setWalletReady] = useState(false)
   const [connectError, setConnectError] = useState<string | null>(null)
-  const [vaultSnapshot, setVaultSnapshot] = useState<VaultSnapshot | null>(null)
   const [claimedUsername, setClaimedUsername] = useState<string | null>(null)
   const [hasUsernameNft, setHasUsernameNft] = useState(false)
+  const [hasNoobPass, setHasNoobPass] = useState(false)
   const connectLock = useRef(false)
   const sessionBootstrapped = useRef(false)
 
@@ -93,6 +77,14 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  const syncNoobPassFromChain = useCallback(async (wallet: string) => {
+    try {
+      setHasNoobPass(await hasNoobPassOnChain(wallet))
+    } catch {
+      setHasNoobPass(false)
+    }
+  }, [])
+
   useEffect(() => {
     if (sessionBootstrapped.current) return
     sessionBootstrapped.current = true
@@ -101,8 +93,9 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       setAddress(saved)
       setClaimedUsername(getClaimedUsername(saved))
       syncUsernameFromChain(saved).catch(() => {})
+      syncNoobPassFromChain(saved).catch(() => {})
     }
-  }, [syncUsernameFromChain])
+  }, [syncUsernameFromChain, syncNoobPassFromChain])
 
   const claimPlayerName = useCallback(
     async (name: string): Promise<ClaimResult> => {
@@ -121,14 +114,25 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     [address]
   )
 
+  const mintCubPass = useCallback(async (): Promise<MintPassResult> => {
+    if (!address) return { ok: false, error: 'Connect your wallet first' }
+    try {
+      const { txId } = await mintNoobPass(address)
+      setHasNoobPass(true)
+      return { ok: true, txId }
+    } catch (e: unknown) {
+      return { ok: false, error: e instanceof Error ? e.message : 'Cub Pass mint failed' }
+    }
+  }, [address])
+
   const shortAddressValue = address ? shortAddr(address) : null
   const displayName = displayNameFor(address, shortAddressValue)
-  const contractLabel = `${contracts.contractAddress}.${contracts.contractName}`
 
   useEffect(() => {
     setClaimedUsername(getClaimedUsername(address))
     if (address) syncUsernameFromChain(address).catch(() => {})
-  }, [address, syncUsernameFromChain])
+    if (address) syncNoobPassFromChain(address).catch(() => {})
+  }, [address, syncUsernameFromChain, syncNoobPassFromChain])
 
   const applyAddress = useCallback((addr: string | null) => {
     setAddress(addr)
@@ -152,6 +156,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       setAddress(saved)
       setClaimedUsername(getClaimedUsername(saved))
       await syncUsernameFromChain(saved)
+      await syncNoobPassFromChain(saved)
       return
     }
     try {
@@ -162,6 +167,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         setClaimedUsername(getClaimedUsername(cached))
         saveWalletSession({ address: cached })
         await syncUsernameFromChain(cached)
+        await syncNoobPassFromChain(cached)
         return
       }
       if (!isConnected()) return
@@ -172,11 +178,12 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         setClaimedUsername(getClaimedUsername(addr))
         saveWalletSession({ address: addr })
         await syncUsernameFromChain(addr)
+        await syncNoobPassFromChain(addr)
       }
     } catch {
       /* no session */
     }
-  }, [syncUsernameFromChain])
+  }, [syncUsernameFromChain, syncNoobPassFromChain])
 
   useEffect(() => {
     if (!walletReady) return
@@ -192,6 +199,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       const result = await connectStacksWallet(options)
       applyAddress(result.address)
       await syncUsernameFromChain(result.address)
+      await syncNoobPassFromChain(result.address)
       return true
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Wallet connection failed'
@@ -209,7 +217,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       connectLock.current = false
       setConnecting(false)
     }
-  }, [applyAddress, syncUsernameFromChain])
+  }, [applyAddress, syncUsernameFromChain, syncNoobPassFromChain])
 
   const disconnectWallet = useCallback(() => {
     loadStacksConnect()
@@ -217,50 +225,10 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       .catch(() => {})
     clearWalletSession()
     setAddress(null)
-    setVaultSnapshot(null)
     setHasUsernameNft(false)
+    setHasNoobPass(false)
     setConnectError(null)
   }, [])
-
-  const vault = useMemo(() => {
-    if (!address) return null
-
-    const executor: ContractCallExecutor = async (call) =>
-      callContract({
-        contractId: `${call.contractAddress}.${call.contractName}`,
-        functionName: call.functionName,
-        functionArgs: call.functionArgs,
-        address,
-        postConditionMode: String(call.postConditionMode ?? 'allow').toLowerCase().includes('deny')
-          ? 'deny'
-          : 'allow',
-      })
-
-    return createVaultClient(address, executor)
-  }, [address])
-
-  const refreshVault = useCallback(async (): Promise<VaultSnapshot | null> => {
-    if (!address) {
-      setVaultSnapshot(null)
-      return null
-    }
-    const ro = createReadOnlyVault()
-    const state = await ro.getVaultState(address)
-    const formatted = formatVaultState(state)
-    const snapshot: VaultSnapshot = {
-      total: formatted.total,
-      locked: formatted.locked,
-      available: formatted.available,
-      hasLock: formatted.hasLock,
-      blocksRemaining: formatted.blocksRemaining,
-    }
-    setVaultSnapshot(snapshot)
-    return snapshot
-  }, [address])
-
-  useEffect(() => {
-    refreshVault().catch(() => setVaultSnapshot(null))
-  }, [refreshVault])
 
   return (
     <WalletContext.Provider
@@ -270,17 +238,15 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         displayName,
         claimedUsername,
         hasUsernameNft,
+        hasNoobPass,
         claimPlayerName,
+        mintCubPass,
         connecting,
         walletReady,
         connected: !!address,
         connectError,
         connectWallet,
         disconnectWallet,
-        vault,
-        vaultSnapshot,
-        refreshVault,
-        contractLabel,
       }}
     >
       {children}
@@ -290,8 +256,4 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 
 export function useWallet() {
   return useContext(WalletContext)
-}
-
-export function formatUsdcx(micro: number | string) {
-  return microToToken(String(micro))
 }

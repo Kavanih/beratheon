@@ -1,55 +1,30 @@
 'use client'
 
 import { DUNGEONS, Dungeon } from '@/lib/game'
-import {
-  DUNGEON_ESCROW_USDCX,
-  UNDERHAUL_ESCROW_USDCX,
-  hasDungeonEscrow,
-  hasUnderhaulEscrow,
-  holdVsLockHint,
-} from '@/lib/vaultGate'
 import HallTileBackground from './HallTileBackground'
-import { Monster, MoveIcon } from './pixel'
+import { EnergyBolt, Monster, MoveIcon } from './pixel'
 
 export default function DungeonSelect({
   energy,
   maxEnergy,
-  vaultLocked,
-  vaultTotal,
-  vaultAvailable,
   entering,
   onEnter,
   onBack,
-  onOpenVault,
 }: {
   energy: number
   maxEnergy: number
-  vaultLocked: string
-  vaultTotal: string
-  vaultAvailable: string
   entering?: boolean
   onEnter: (d: Dungeon) => void
   onBack: () => void
-  onOpenVault?: () => void
 }) {
-  const normalOk = hasDungeonEscrow(vaultLocked)
-  const underhaulOk = hasUnderhaulEscrow(vaultLocked)
-  const lockedAmt = Number(vaultLocked) || 0
-  const holdHint = holdVsLockHint(vaultTotal, vaultLocked)
-
-  function canEnterDungeon(d: Dungeon) {
-    if (d.id === 'underhaul') return underhaulOk && energy >= d.energy
-    return normalOk && energy >= d.energy
+  function handleDungeonClick(d: Dungeon) {
+    if (energy < d.energy) return
+    onEnter(d)
   }
 
   function enterLabel(d: Dungeon) {
-    if (d.id === 'underhaul') {
-      if (!underhaulOk) return `Lock ${UNDERHAUL_ESCROW_USDCX} USDCx in Vault`
-    } else if (!normalOk) {
-      return `Lock ${DUNGEON_ESCROW_USDCX} USDCx in Vault`
-    }
     if (energy < d.energy) return 'Not enough energy'
-    return `Enter · ${d.energy}⚡`
+    return `Enter · ${d.energy} energy`
   }
 
   return (
@@ -78,52 +53,13 @@ export default function DungeonSelect({
           <span className="label-chip px-2 py-1">Win an exchange → deal damage &amp; repair shield</span>
         </div>
 
-        <div className="mt-4 pixel-panel flex flex-wrap items-center gap-3 px-4 py-3">
-          <div className="flex-1 font-silk text-[11px] leading-5 text-parchment/85">
-            <span className="text-gold">FlowVault entry fees</span> — vault total{' '}
-            <span className="text-gold">{vaultTotal} USDCx</span>
-            {' · '}
-            locked <span className="text-gold">{vaultLocked}</span>
-            {' · '}
-            hold <span className="text-gold">{vaultAvailable}</span>
-            <span className="mt-1 block">
-              Dungetron only checks <span className="text-gold">LOCK</span>, not HOLD. Normal needs{' '}
-              {DUNGEON_ESCROW_USDCX} USDCx locked · Underhaul needs {UNDERHAUL_ESCROW_USDCX} USDCx locked total.
-            </span>
-            {holdHint && (
-              <span className="mt-2 block rounded border border-hp/40 bg-hp/10 px-2 py-2 text-hp">{holdHint}</span>
-            )}
-            {!holdHint && !normalOk && (
-              <span className="mt-1 block text-hp">
-                Vault → choose <span className="text-gold">Dungeon Run Escrow</span> → Set Strategy → Deposit 2+ USDCx
-                (1 locks, rest stays withdrawable).
-              </span>
-            )}
-            {normalOk && !underhaulOk && (
-              <span className="mt-1 block text-parchment/70">
-                Underhaul needs {UNDERHAUL_ESCROW_USDCX} USDCx locked ({lockedAmt}/{UNDERHAUL_ESCROW_USDCX}) — use Underhaul
-                Entry Vault strategy.
-              </span>
-            )}
-          </div>
-          {onOpenVault && (
-            <button onClick={onOpenVault} className="pixel-btn pixel-btn-gold px-3 py-2 font-silk text-[11px]">
-              Open Vault →
-            </button>
-          )}
-        </div>
-
         <p className="mt-3 font-silk text-[10px] text-parchment/60">
           Energy: {energy}/{maxEnergy} · regens 10 per hour (full in 24h)
         </p>
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2">
           {DUNGEONS.map((d) => {
-            const canEnter = canEnterDungeon(d)
-            const fee =
-              d.id === 'underhaul'
-                ? `${UNDERHAUL_ESCROW_USDCX} USDCx locked`
-                : `${DUNGEON_ESCROW_USDCX} USDCx locked`
+            const energyOk = energy >= d.energy
             return (
               <div key={d.id} className="pixel-panel overflow-hidden">
                 <div className="relative grid h-40 place-items-center overflow-hidden border-b-2 border-edge bg-[#1a1410]/80">
@@ -136,16 +72,17 @@ export default function DungeonSelect({
                   <p className="mt-2 h-14 font-silk text-[11px] leading-5 text-parchment/75">{d.desc}</p>
                   <div className="mt-2 flex flex-wrap gap-1.5 font-silk text-[10px]">
                     <span className="label-chip px-2 py-1">{d.floors} floors · {d.rooms} rooms</span>
-                    <span className="label-chip px-2 py-1 text-gold">⚡ {d.energy} energy</span>
-                    <span className="label-chip px-2 py-1 text-gold">Entry: {fee}</span>
+                    <span className="label-chip flex items-center gap-1 px-2 py-1 text-gold">
+                      <EnergyBolt size={10} /> {d.energy} energy
+                    </span>
                   </div>
                   <div className="mt-2 font-silk text-[10px] text-parchment/60">Rewards: {d.reward}</div>
                   <button
-                    onClick={() => onEnter(d)}
-                    disabled={!canEnter || entering}
+                    onClick={() => handleDungeonClick(d)}
+                    disabled={entering || !energyOk}
                     className="pixel-btn pixel-btn-gold mt-3 w-full px-4 py-3 font-silk text-[12px]"
                   >
-                    {entering ? 'Checking vault…' : enterLabel(d)}
+                    {entering ? 'Entering…' : enterLabel(d)}
                   </button>
                 </div>
               </div>

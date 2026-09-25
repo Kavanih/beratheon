@@ -8,6 +8,7 @@
     "faucet:stx": "node --env-file=.env scripts/request-faucet.mjs",
     "flowvault:smoke": "node --env-file=.env scripts/flowvault-smoke.mjs",
     "seed:marketplace": "node --env-file=.env scripts/seed-marketplace.mjs",
+    "deploy:marketplace-v2": "node --env-file=.env scripts/deploy-marketplace-v2.mjs",
     "test": "npm run wallet:info && npm run flowvault:smoke"
   },
   "dependencies": {

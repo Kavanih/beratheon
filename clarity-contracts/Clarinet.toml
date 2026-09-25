@@ -51,6 +51,12 @@ depends_on = ["traits", "items-sft", "cub-nft", "username-nft"]
 clarity_version = 3
 epoch = "3.0"
 
+[contracts.marketplace-v2]
+path = "contracts/marketplace.clar"
+depends_on = ["traits", "items-sft", "cub-nft", "username-nft"]
+clarity_version = 3
+epoch = "3.0"
+
 [contracts.crafting]
 path = "contracts/crafting.clar"
 depends_on = ["traits", "items-sft", "game-authority"]

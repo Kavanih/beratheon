@@ -68,6 +68,8 @@ img {
     border-radius: 4px;
   }
 
+  /* Chunky press: a flat solid shadow stands in for the button's own thickness —
+     it sinks into that shadow on press rather than just dimming. */
   .pixel-btn {
     font-family: 'Silkscreen', monospace;
     text-transform: uppercase;
@@ -75,19 +77,18 @@ img {
     background: linear-gradient(180deg, var(--dungeon-stone), var(--dungeon-mortar));
     border: 2px solid var(--dungeon-wood);
     color: var(--dungeon-text-hi);
-    box-shadow: inset 0 1px 0 rgba(169, 113, 66, 0.22);
-    transition: all 0.12s ease;
+    box-shadow: 0 4px 0 var(--dungeon-wood-dark);
+    transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.12s ease, color 0.12s ease;
     border-radius: 3px;
   }
-  .pixel-btn:hover {
+  .pixel-btn:hover:not(:disabled) {
     border-color: var(--dungeon-gold);
     color: #fff8e7;
-    box-shadow:
-      inset 0 1px 0 rgba(201, 162, 39, 0.3),
-      0 0 14px rgba(82, 183, 136, 0.25);
+    box-shadow: 0 4px 0 var(--dungeon-wood-dark), 0 0 14px rgba(82, 183, 136, 0.25);
   }
-  .pixel-btn:active {
-    transform: translateY(1px);
+  .pixel-btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: none;
   }
   .pixel-btn:disabled {
     opacity: 0.4;
@@ -100,10 +101,15 @@ img {
     border-color: #f0d878;
     color: #2a1700;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 0 #6b4a0a;
   }
-  .pixel-btn-gold:hover {
-    box-shadow: 0 0 16px rgba(201, 162, 39, 0.45);
+  .pixel-btn-gold:hover:not(:disabled) {
     color: #1a0e00;
+    box-shadow: 0 4px 0 #6b4a0a, 0 0 16px rgba(201, 162, 39, 0.45);
+  }
+  .pixel-btn-gold:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: none;
   }
 
   .dungeon-floor {
@@ -476,7 +482,7 @@ img {
     -ms-interpolation-mode: nearest-neighbor;
   }
 
-  /* ── 8-bit sidebar rail (no glow, no radius, pure black) ── */
+  /* ── 8-bit sidebar rail — flat glyphs, per-item accent glow on hover/active ── */
   .pixel-rail {
     background: var(--dungeon-bg);
     border-right: 2px solid var(--dungeon-wood-dark);
@@ -495,6 +501,7 @@ img {
   }
 
   .pixel-rail-btn {
+    --rail-accent: var(--dungeon-gold);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -506,16 +513,19 @@ img {
     border-radius: 0;
     background: transparent;
     cursor: pointer;
-    transition: none;
+    transition: background-color 0.12s ease, box-shadow 0.12s ease;
   }
 
   .pixel-rail-btn:hover:not(.pixel-rail-btn--active) {
     background: var(--dungeon-stone-dark);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rail-accent) 55%, transparent);
   }
 
   .pixel-rail-btn--active {
     background: var(--dungeon-mortar);
-    box-shadow: inset 0 0 0 2px var(--dungeon-gold);
+    box-shadow:
+      inset 0 0 0 2px var(--rail-accent),
+      0 0 12px color-mix(in srgb, var(--rail-accent) 45%, transparent);
   }
 
   .pixel-rail-btn--active::before {
@@ -525,8 +535,8 @@ img {
     top: 6px;
     bottom: 6px;
     width: 3px;
-    background: var(--dungeon-gold);
-    box-shadow: none;
+    background: var(--rail-accent);
+    box-shadow: 0 0 6px var(--rail-accent);
   }
 
   .pixel-rail-tip {
@@ -541,6 +551,102 @@ connect-modal {
   inset: 0 !important;
   z-index: 2147483646 !important;
   pointer-events: auto !important;
+}
+
+/* Boot splash — chunky beveled pixel wordmark, Beratheon's own palette */
+.splash-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: grid;
+  place-items: center;
+  background: var(--dungeon-bg);
+  transition: opacity 0.4s ease;
+}
+
+.splash-gate--out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.splash-rule {
+  width: 64px;
+  height: 2px;
+  background: var(--dungeon-gold);
+  box-shadow: 0 0 8px rgba(201, 162, 39, 0.5);
+}
+
+.splash-wordmark-wrap {
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(28px, 6vw, 52px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.splash-wordmark-outline,
+.splash-wordmark-face {
+  display: block;
+  white-space: nowrap;
+}
+
+.splash-wordmark-outline {
+  color: transparent;
+  -webkit-text-stroke: 6px #0f0b08;
+  text-shadow:
+    2px 0 0 #0f0b08, -2px 0 0 #0f0b08, 0 2px 0 #0f0b08, 0 -2px 0 #0f0b08,
+    3px 3px 0 #0f0b08, -3px -3px 0 #0f0b08, 3px -3px 0 #0f0b08, -3px 3px 0 #0f0b08;
+}
+
+.splash-wordmark-face {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #f0d878;
+  text-shadow:
+    2px 2px 0 var(--dungeon-gold),
+    4px 4px 0 var(--dungeon-wood-light),
+    6px 6px 0 #6b1d28,
+    8px 8px 12px rgba(0, 0, 0, 0.55);
+}
+
+.splash-tagline {
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dungeon-text-muted);
+}
+
+.splash-loading {
+  font-family: 'Silkscreen', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dungeon-text);
+}
+
+.splash-loading::after {
+  content: '';
+  display: inline-block;
+  width: 1.4em;
+  text-align: left;
+  animation: splash-dots 1.1s steps(4, end) infinite;
+}
+
+@keyframes splash-dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+  100% { content: ''; }
 }
 
 /* Mobile — desktop-only game shell */
